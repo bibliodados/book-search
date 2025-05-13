@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscador de Livros</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2980b9;
+      --background-color: #f4f6f8;
+      --card-color: #ffffff;
+      --text-color: #333333;
+      --border-radius: 8px;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .search-form {
+      background-color: var(--card-color);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    
+    .form-group {
+      margin-bottom: 10px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    input, button {
+      padding: 12px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ddd;
+      width: 100%;
+      font-size: 1rem;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-weight: 600;
+    }
+    
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .resultado {
+      display: none;
+      background-color: var(--card-color);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .resultado.show {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 20px;
+    }
+    
+    .dados {
+      overflow: hidden;
+    }
+    
+    .capa img {
+      max-width: 100%;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .book-info {
+      margin-bottom: 20px;
+    }
+    
+    .info-item {
+      margin-bottom: 8px;
+    }
+    
+    .info-label {
+      font-weight: 600;
+    }
+    
+    .btn-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    
+    .btn-link {
+      padding: 8px 12px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-link:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    textarea {
+      width: 100%;
+      height: 250px;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ddd;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin-top: 15px;
+      resize: vertical;
+    }
+    
+    .marc-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .marc-actions button {
+      flex: 1;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      font-weight: 600;
+      color: var(--primary-color);
+      display: none;
+    }
+    
+    .loading.show {
+      display: block;
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      background-color: #fadbd8;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .error-message.show {
+      display: block;
+    }
+    
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background-color: #eee;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .tab-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .tab-btn:first-child {
+      border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+    
+    .tab-btn:last-child {
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .resultado.show {
+        grid-template-columns: 1fr;
+      }
+      
+      .capa {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      
+      .capa img {
+        max-height: 300px;
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Buscador de Livros</h1>
+    
+    <div class="search-form">
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="search">Busca por Dados</button>
+        <button class="tab-btn" data-tab="isbn">Busca por ISBN</button>
+      </div>
+      
+      <div id="search-tab" class="form-grid">
+        <div class="form-group">
+          <label for="titulo">Título do Livro</label>
+          <input type="text" id="titulo" placeholder="Digite o título do livro">
+        </div>
+        <div class="form-group">
+          <label for="autor">Autor do Livro</label>
+          <input type="text" id="autor" placeholder="Digite o nome do autor">
+        </div>
+        <div class="form-group">
+          <button id="btnBuscarDados" onclick="buscarPorDados()">Buscar</button>
+        </div>
+      </div>
+      
+      <div id="isbn-tab" class="form-grid" style="display: none;">
+        <div class="form-group">
+          <label for="isbn">ISBN do Livro</label>
+          <input type="text" id="isbn" placeholder="Digite o ISBN (10 ou 13 dígitos)">
+        </div>
+        <div class="form-group">
+          <button id="btnBuscarISBN" onclick="buscarPorISBN()">Buscar por ISBN</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="loading" id="loading">Buscando informações do livro...</div>
+    <div class="error-message" id="error-message"></div>
+    
+    <div class="resultado" id="resultado"></div>
+  </div>
+  
+  <footer>&copy; 2025 Marcelo Diniz - Buscador de Livros (OpenLibrary + Google Books)</footer>
+  <a id="downloadLink" style="display:none"></a>
+  
+  <script>
+    // Funções de gerenciamento da interface
+    document.querySelectorAll('.tab-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        const tab = button.getAttribute('data-tab');
+        if (tab === 'search') {
+          document.getElementById('search-tab').style.display = 'grid';
+          document.getElementById('isbn-tab').style.display = 'none';
+        } else {
+          document.getElementById('search-tab').style.display = 'none';
+          document.getElementById('isbn-tab').style.display = 'grid';
+        }
+      });
+    });
+    
+    function mostrarLoading() {
+      document.getElementById('loading').classList.add('show');
+      document.getElementById('resultado').classList.remove('show');
+      document.getElementById('error-message').classList.remove('show');
+    }
+    
+    function ocultarLoading() {
+      document.getElementById('loading').classList.remove('show');
+    }
+    
+    function mostrarErro(mensagem) {
+      const errorElement = document.getElementById('error-message');
+      errorElement.textContent = mensagem;
+      errorElement.classList.add('show');
+      ocultarLoading();
+    }
+    
+    // Funções para download de arquivos
+    function downloadMARC(content, filename) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const link = document.getElementById('downloadLink');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    }
+    
+    function copiarParaClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          alert('MARC21 copiado para a área de transferência!');
+        })
+        .catch(err => {
+          console.error('Erro ao copiar: ', err);
+          alert('Não foi possível copiar o texto. Por favor, selecione e copie manualmente.');
+        });
+    }
+    
+    // Funções para gerar MARC21
+    function gerarMARC21(livro, info, isbn, capa, googleLink) {
+      // Garante que há valores padrão caso os dados estejam ausentes
+      const authorName = (livro.author_name && livro.author_name.length > 0) ? livro.author_name[0] : 'Desconhecido';
+      const publishYear = livro.first_publish_year || 'xxxx';
+      const pageCount = info.pageCount || '???';
+      const subtitle = info.subtitle || 'Não informadas';
+      const description = info.description || 'Resumo não disponível';
+      const title = livro.title || 'Sem título';
+      
+      return `000 01019nam a2200301 a 4500
+001 ${livro.key ? livro.key.replace('/works/', '') : isbn}
+005 ${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14)}
+008 ${new Date().toISOString().slice(2, 10).replace(/-/g, '')}s${publishYear} xx 000 0 por
+010 __|a${isbn}
+035 __|a(OpenLibrary)${livro.key || 'N/A'}
+100 1_|a${authorName}
+245 10|a${title}
+260 __|c${publishYear}
+300 __|a${pageCount} p.
+504 __|aNotas: ${subtitle}
+520 __|a${description}
+856 __|u${capa}|yCapa|zLink da imagem
+856 __|uhttps://www.amazon.com.br/s?k=${isbn}|zAmazon
+856 __|u${googleLink || '#'}|zGoogle Books
+856 __|uhttps://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(title)}|zSkoob
+`; 
+    }
+
+    function gerarMARC21FromGoogleBooks(info, isbn, capa, googleLink) {
+      // Garante que há valores padrão caso os dados estejam ausentes
+      const authors = (info.authors && info.authors.length > 0) ? info.authors[0] : 'Desconhecido';
+      const publishedDate = info.publishedDate || 'xxxx';
+      const pageCount = info.pageCount || '???';
+      const subtitle = info.subtitle || 'Não informadas';
+      const description = info.description || 'Resumo não disponível';
+      const title = info.title || 'Sem título';
+      
+      return `000 01019nam a2200301 a 4500
+001 ${isbn}
+005 ${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14)}
+008 ${new Date().toISOString().slice(2, 10).replace(/-/g, '')}s${publishedDate} xx 000 0 por
+010 __|a${isbn}
+035 __|a(GoogleBooks)${isbn}
+100 1_|a${authors}
+245 10|a${title}
+260 __|c${publishedDate}
+300 __|a${pageCount} p.
+504 __|aNotas: ${subtitle}
+520 __|a${description}
+856 __|u${capa}|yCapa|zLink da imagem
+856 __|uhttps://www.amazon.com.br/s?k=${isbn}|zAmazon
+856 __|u${googleLink || '#'}|zGoogle Books
+856 __|uhttps://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(title)}|zSkoob
+`; 
+    }
+    
+    // Função para exibir os resultados na página
+    function mostrarResultado(data) {
+      const resultado = document.getElementById('resultado');
+      
+      // Estrutura do objeto data:
+      // { title, author, edition, isbn, year, description, amazonLink, googleLink, skoobLink, capa, marc21 }
+      
+      resultado.innerHTML = `
+        <div class="dados">
+          <div class="book-info">
+            <div class="info-item"><span class="info-label">Título:</span> ${data.title || 'N/A'}</div>
+            <div class="info-item"><span class="info-label">Autor:</span> ${data.author || 'N/A'}</div>
+            <div class="info-item"><span class="info-label">Edição:</span> ${data.edition || 'N/A'}</div>
+            <div class="info-item"><span class="info-label">ISBN:</span> ${data.isbn || 'N/A'}</div>
+            <div class="info-item"><span class="info-label">Ano:</span> ${data.year || 'N/A'}</div>
+            <div class="info-item"><span class="info-label">Resumo:</span> ${data.description || 'Não disponível'}</div>
+          </div>
+          
+          <div class="btn-links">
+            ${data.amazonLink ? `<a href="${data.amazonLink}" target="_blank" class="btn-link">Amazon</a>` : ''}
+            ${data.googleLink ? `<a href="${data.googleLink}" target="_blank" class="btn-link">Google Books</a>` : ''}
+            ${data.skoobLink ? `<a href="${data.skoobLink}" target="_blank" class="btn-link">Skoob</a>` : ''}
+          </div>
+          
+          <textarea id="marc21Text" readonly>${data.marc21}</textarea>
+          
+          <div class="marc-actions">
+            <button onclick="downloadMARC(document.getElementById('marc21Text').value, '${data.title.replace(/[^\w\s]/gi, '')}_marc21.txt')">Baixar MARC21 (.txt)</button>
+            <button onclick="copiarParaClipboard(document.getElementById('marc21Text').value)">Copiar MARC21</button>
+          </div>
+        </div>
+        <div class="capa">
+          ${data.capa ? `<img src="${data.capa}" alt="Capa do livro ${data.title}">` : '<div style="text-align:center;padding:20px;">Sem imagem disponível</div>'}
+        </div>`;
+      
+      resultado.classList.add('show');
+      ocultarLoading();
+      
+      // Scroll suave até o resultado
+      resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Funções de busca
+    async function buscarPorISBN() {
+      const isbnInput = document.getElementById('isbn').value.trim();
+      
+      if (!isbnInput) {
+        mostrarErro('Por favor, digite um ISBN válido');
+        return;
+      }
+      
+      // Remove caracteres não numéricos do ISBN
+      const isbn = isbnInput.replace(/[^0-9X]/gi, '');
+      
+      // Verifica se o ISBN tem um formato válido
+      if (!(isbn.length === 10 || isbn.length === 13)) {
+        mostrarErro('O ISBN deve ter 10 ou 13 dígitos');
+        return;
+      }
+      
+      mostrarLoading();
+      console.log("Buscando ISBN:", isbn);
+      
+      try {
+        // Tenta buscar primeiro no Google Books
+        console.log("Buscando no Google Books");
+        const gbRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+        const gbData = await gbRes.json();
+        console.log("Resposta Google Books:", gbData);
+        
+        if (gbData.items && gbData.items.length > 0) {
+          const info = gbData.items[0].volumeInfo;
+          const capa = info.imageLinks ? info.imageLinks.thumbnail.replace('http:', 'https:') : '';
+          const googleLink = info.infoLink || '';
+          const marc21 = gerarMARC21FromGoogleBooks(info, isbn, capa, googleLink);
+          
+          mostrarResultado({
+            title: info.title || 'N/A',
+            author: (info.authors || []).join(', '),
+            edition: info.contentVersion || 'N/A',
+            isbn: isbn,
+            year: info.publishedDate || 'N/A',
+            description: info.description || 'Não disponível',
+            amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
+            googleLink: googleLink,
+            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(info.title || '')}`,
+            capa: capa,
+            marc21: marc21
+          });
+          return;
+        }
+        
+        // Se não encontrar no Google Books, tenta diretamente na OpenLibrary
+        console.log("Buscando na OpenLibrary");
+        const olSearchRes = await fetch(`https://openlibrary.org/search.json?q=isbn:${isbn}`);
+        const olSearchData = await olSearchRes.json();
+        console.log("Resposta OpenLibrary Search:", olSearchData);
+        
+        if (olSearchData.docs && olSearchData.docs.length > 0) {
+          const livro = olSearchData.docs[0];
+          const workKey = livro.key;
+          const capa = livro.cover_i ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-L.jpg` : '';
+          
+          // Tentamos obter mais informações da obra
+          let description = '';
+          if (workKey) {
+            try {
+              const workRes = await fetch(`https://openlibrary.org${workKey}.json`);
+              const workData = await workRes.json();
+              console.log("Dados da obra:", workData);
+              
+              description = workData.description || '';
+              if (typeof description === 'object' && description.value) {
+                description = description.value;
+              }
+            } catch (e) {
+              console.error("Erro ao buscar detalhes da obra:", e);
+            }
+          }
+          
+          const marc21 = gerarMARC21(
+            { 
+              key: workKey || '', 
+              title: livro.title,
+              author_name: livro.author_name || [],
+              first_publish_year: livro.first_publish_year
+            },
+            { 
+              description: description,
+              pageCount: livro.number_of_pages_median || '???',
+              subtitle: ''
+            },
+            isbn,
+            capa,
+            ''
+          );
+          
+          mostrarResultado({
+            title: livro.title || 'N/A',
+            author: (livro.author_name || []).join(', '),
+            edition: livro.edition_key ? livro.edition_key[0] : 'N/A',
+            isbn: isbn,
+            year: livro.first_publish_year || 'N/A',
+            description: description || 'Não disponível',
+            amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
+            googleLink: '',
+            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            capa: capa,
+            marc21: marc21
+          });
+          return;
+        }
+        
+        // Tenta outra abordagem com a OpenLibrary
+        console.log("Tentando outra abordagem com a OpenLibrary");
+        const olRes = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+        const olData = await olRes.json();
+        console.log("Resposta OpenLibrary API:", olData);
+        const bookKey = `ISBN:${isbn}`;
+        
+        if (olData[bookKey]) {
+          const book = olData[bookKey];
+          const capa = book.cover ? 
+                       (book.cover.large || book.cover.medium || book.cover.small) : '';
+          
+          // Para completar informações, tenta buscar mais detalhes do livro
+          let workKey = '';
+          let description = '';
+          
+          if (book.works && book.works.length > 0) {
+            workKey = book.works[0].key;
+            try {
+              const workRes = await fetch(`https://openlibrary.org${workKey}.json`);
+              const workData = await workRes.json();
+              console.log("Dados da obra (método 2):", workData);
+              
+              description = workData.description || '';
+              if (typeof description === 'object' && description.value) {
+                description = description.value;
+              }
+            } catch (e) {
+              console.error("Erro ao buscar detalhes da obra (método 2):", e);
+            }
+          }
+          
+          const marc21 = gerarMARC21(
+            { 
+              key: workKey, 
+              title: book.title,
+              author_name: book.authors ? book.authors.map(a => a.name) : [],
+              first_publish_year: book.publish_date
+            },
+            { 
+              description: description,
+              pageCount: book.number_of_pages || '???',
+              subtitle: ''
+            },
+            isbn,
+            capa,
+            ''
+          );
+          
+          mostrarResultado({
+            title: book.title || 'N/A',
+            author: book.authors ? book.authors.map(a => a.name).join(', ') : 'N/A',
+            edition: 'N/A',
+            isbn: isbn,
+            year: book.publish_date || 'N/A',
+            description: description || 'Não disponível',
+            amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
+            googleLink: '',
+            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(book.title || '')}`,
+            capa: capa,
+            marc21: marc21
+          });
+          return;
+        }
+        
+        // Se não encontrar em nenhuma fonte, tenta uma busca mais genérica
+        console.log("Tentando busca genérica");
+        const genericSearchRes = await fetch(`https://openlibrary.org/search.json?q=${isbn}`);
+        const genericSearchData = await genericSearchRes.json();
+        console.log("Resposta busca genérica:", genericSearchData);
+        
+        if (genericSearchData.docs && genericSearchData.docs.length > 0) {
+          const livro = genericSearchData.docs[0];
+          const capa = livro.cover_i ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-L.jpg` : '';
+          
+          const marc21 = gerarMARC21(
+            livro,
+            { 
+              description: '',
+              pageCount: livro.number_of_pages_median || '???',
+              subtitle: ''
+            },
+            isbn,
+            capa,
+            ''
+          );
+          
+          mostrarResultado({
+            title: livro.title || 'N/A',
+            author: (livro.author_name || []).join(', '),
+            edition: livro.edition_key ? livro.edition_key[0] : 'N/A',
+            isbn: isbn,
+            year: livro.first_publish_year || 'N/A',
+            description: 'Não disponível',
+            amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
+            googleLink: '',
+            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            capa: capa,
+            marc21: marc21
+          });
+          return;
+        }
+        
+        // Se não encontrar em nenhuma fonte
+        mostrarErro('Livro não encontrado com este ISBN. Tente buscar por título e autor.');
+      } catch (error) {
+        console.error('Erro ao buscar livro:', error);
+        mostrarErro('Ocorreu um erro ao buscar o livro. Por favor, tente novamente. Detalhe: ' + error.message);
+      }
+    }
+    
+    async function buscarPorDados() {
+      const titulo = document.getElementById('titulo').value.trim();
+      const autor = document.getElementById('autor').value.trim();
+      
+      if (!titulo && !autor) {
+        mostrarErro('Por favor, digite pelo menos um título ou autor');
+        return;
+      }
+      
+      mostrarLoading();
+      console.log("Buscando por título/autor:", titulo, autor);
+      
+      try {
+        // Constroe o parâmetro de busca baseado no que foi fornecido
+        let searchQuery = '';
+        if (titulo) searchQuery += `title=${encodeURIComponent(titulo)}`;
+        if (titulo && autor) searchQuery += '&';
+        if (autor) searchQuery += `author=${encodeURIComponent(autor)}`;
+        
+        // Busca na OpenLibrary
+        console.log("Buscando na OpenLibrary com:", searchQuery);
+        const olRes = await fetch(`https://openlibrary.org/search.json?${searchQuery}`);
+        const olData = await olRes.json();
+        console.log("Resposta OpenLibrary:", olData);
+        
+        if (olData.docs && olData.docs.length > 0) {
+          const livro = olData.docs[0];
+          console.log("Livro encontrado:", livro);
+          
+          const capa = livro.cover_i ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-L.jpg` : '';
+          const isbn = livro.isbn && livro.isbn.length > 0 ? livro.isbn[0] : '';
+          
+          // Busca descrição adicional se tiver workKey
+          let description = '';
+          if (livro.key) {
+            try {
+              const workRes = await fetch(`https://openlibrary.org${livro.key}.json`);
+              const workData = await workRes.json();
+              console.log("Detalhes da obra:", workData);
+              
+              if (workData.description) {
+                description = workData.description;
+                if (typeof description === 'object' && description.value) {
+                  description = description.value;
+                }
+              }
+            } catch (e) {
+              console.warn('Erro ao buscar detalhes da obra:', e);
+            }
+          }
+          
+          let infoGoogle = {};
+          let googleLink = '';
+          
+          // Se tiver ISBN, tenta completar com dados do Google Books
+          if (isbn) {
+            try {
+              console.log("Buscando no Google Books com ISBN:", isbn);
+              const gbRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+              const gbData = await gbRes.json();
+              console.log("Resposta Google Books (ISBN):", gbData);
+              
+              if (gbData.items && gbData.items.length > 0) {
+                infoGoogle = gbData.items[0].volumeInfo;
+                googleLink = infoGoogle.infoLink || '';
+              }
+            } catch (e) {
+              console.warn('Erro ao buscar informações do Google Books:', e);
+            }
+          }
+          
+          // Se não tiver ISBN ou não encontrou no Google, tenta buscar por título
+          if (Object.keys(infoGoogle).length === 0) {
+            try {
+              console.log("Buscando no Google Books por título:", livro.title);
+              const gbTitleRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(livro.title)}`);
+              const gbTitleData = await gbTitleRes.json();
+              console.log("Resposta Google Books (título):", gbTitleData);
+              
+              if (gbTitleData.items && gbTitleData.items.length > 0) {
+                infoGoogle = gbTitleData.items[0].volumeInfo;
+                googleLink = infoGoogle.infoLink || '';
+                
+                // Se não achou ISBN na OpenLibrary, tenta pegar do Google Books
+                if (!isbn && infoGoogle.industryIdentifiers) {
+                  const isbnObj = infoGoogle.industryIdentifiers.find(id => 
+                    id.type === 'ISBN_13' || id.type === 'ISBN_10');
+                  if (isbnObj) {
+                    console.log("ISBN encontrado no Google Books:", isbnObj.identifier);
+                    isbn = isbnObj.identifier;
+                  }
+                }
+              }
+            } catch (e) {
+              console.warn('Erro ao buscar por título no Google Books:', e);
+            }
+          }
+          
+          // Se tiver descrição do Google Books, use-a
+          if (!description && infoGoogle.description) {
+            description = infoGoogle.description;
+          }
+          
+          const marc21 = gerarMARC21(livro, 
+            { 
+              description: description || infoGoogle.description || '',
+              pageCount: infoGoogle.pageCount || livro.number_of_pages_median || '???',
+              subtitle: infoGoogle.subtitle || ''
+            }, 
+            isbn, 
+            capa, 
+            googleLink);
+          
+          mostrarResultado({
+            title: livro.title || 'N/A',
+            author: (livro.author_name || []).join(', '),
+            edition: livro.edition_key ? livro.edition_key[0] : 'N/A',
+            isbn: isbn || 'N/A',
+            year: livro.first_publish_year || 'N/A',
+            description: description || infoGoogle.description || 'Não disponível',
+            amazonLink: isbn ? `https://www.amazon.com.br/s?k=${isbn}` : `https://www.amazon.com.br/s?k=${encodeURIComponent(livro.title || '')}`,
+            googleLink: googleLink,
+            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            capa: capa,
+            marc21: marc21
+          });
+          return;
+        }
+        
+        // Se não encontrar na OpenLibrary, tenta buscar direto no Google Books
+        console.log("Nada encontrado na OpenLibrary, tentando Google Books");
+        let googleQuery = '';
+        if (titulo) googleQuery += `intitle:${encodeURIComponent(titulo)}`;
+        if (titulo && autor) googleQuery += '+';
+        if (autor) googleQuery += `inauthor:${encodeURIComponent(autor)}`;
+        
+        console.log("Query Google Books:", googleQuery);
+        const gbRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${googleQuery}`);
+        const gbData = await gbRes.json();
+        console.log("Resposta Google Books (busca direta):", gbData);
+        
+        if (gbData.items && gbData.items.length > 0) {
+          const info = gbData.items[0].volumeInfo;
+          console.log("Livro encontrado no Google Books:", info);
+          
+          const capa = info.imageLinks ? info.imageLinks.thumbnail.replace('http:', 'https:') : '';
+          const googleLink = info.infoLink || '';
+          
+          // Tenta encontrar um ISBN
+          let isbn = 'N/A';
+          if (info.industryIdentifiers) {
+            const isbnObj = info.industryIdentifiers.find(id => id.type === 'ISBN_13' || id.type === 'ISBN_10');
+            if (isbnObj) {
+              isbn = isbnObj.identifier;
+            }
+          }
+          
+          const marc21 = gerarMARC21FromGoogleBooks(info, isbn, capa, googleLink);
+          
+          mostrarResultado({
+            title: info.title || 'N/A',
+            author: (info.authors || []).join(', '),
+            edition: info.contentVersion || 'N/A',
+            isbn: isbn,
+            year: info.publishedDate || 'N/A',
+            description: info.description || 'Não disponível',
+            amazonLink: isbn !== 'N/A' ? `https://www.amazon.com.br/s?k=${isbn}` : `https://www.amazon.com.br/s?k=${encodeURIComponent(info.title || '')}`,
+            googleLink: googleLink,
+            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(info.title || '')}`,
+            capa: capa,
+            marc21: marc21
+          });
+          return;
+        }
+        
+        // Tenta uma busca mais genérica na OpenLibrary como última tentativa
+        console.log("Tentando busca genérica combinada na OpenLibrary");
+        const genericQuery = titulo || autor;
+        const genericRes = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(genericQuery)}`);
+        const genericData = await genericRes.json();
+        console.log("Resposta busca genérica OpenLibrary:", genericData);
+        
+        if (genericData.docs && genericData.docs.length > 0) {
+          const livro = genericData.docs[0];
+          const capa = livro.cover_i ? `https://covers.openlibrary.org/b/id/${livro.cover_i}-L.jpg` : '';
+          const isbn = livro.isbn && livro.isbn.length > 0 ? livro.isbn[0] : 'N/A';
+          
+          const marc21 = gerarMARC21(livro, {description: '', pageCount: '', subtitle: ''}, isbn, capa, '');
+          
+          mostrarResultado({
+            title: livro.title || 'N/A',
+            author: (livro.author_name || []).join(', '),
+            edition: livro.edition_key ? livro.edition_key[0] : 'N/A',
+            isbn: isbn,
+            year: livro.first_publish_year || 'N/A',
+            description: 'Não disponível',
+            amazonLink: isbn !== 'N/A' ? `https://www.amazon.com.br/s?k=${isbn}` : `https://www.amazon.com.br/s?k=${encodeURIComponent(livro.title || '')}`,
+            google
+    
+    // Adiciona handler para a tecla Enter
+    document.getElementById('titulo').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') buscarPorDados();
+    });
+    
+    document.getElementById('autor').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') buscarPorDados();
+    });
+    
+    document.getElementById('isbn').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') buscarPorISBN();
+    });
+  </script>
+</body>
+</html>
