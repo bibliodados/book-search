@@ -372,35 +372,90 @@
         });
     }
     
-    // Funções para gerar MARC21
-    function gerarMARC21(livro, info, isbn, capa, googleLink) {
-      // Garante que há valores padrão caso os dados estejam ausentes
-      const authorName = (livro.author_name && livro.author_name.length > 0) ? livro.author_name[0] : 'Desconhecido';
-      const publishYear = livro.first_publish_year || 'xxxx';
-      const pageCount = info.pageCount || '???';
-      const subtitle = info.subtitle || 'Não informadas';
-      const description = info.description || 'Resumo não disponível';
-      const title = livro.title || 'Sem título';
-      
-      return `000 01019nam a2200301 a 4500
+    // Função para formatar nome do autor no estilo "Sobrenome, Nome"
+function formatarNomeAutor(nomeCompleto) {
+  if (!nomeCompleto) return 'Desconhecido';
+  const partes = nomeCompleto.trim().split(' ');
+  if (partes.length === 1) return nomeCompleto; // Ex: "Homero"
+  const sobrenome = partes.pop(); // Último nome
+  const prenome = partes.join(' '); // Restante
+  return `${sobrenome}, ${prenome}`;
+}
+
+// Função MARC21 adaptada com todos os campos e nome formatado
+function gerarMARC21(livro, info, isbn, capa, googleLink) {
+  const rawAuthor = (livro.author_name && livro.author_name.length > 0) ? livro.author_name[0] : 'Desconhecido';
+  const authorName = formatarNomeAutor(rawAuthor);
+
+  const publishYear = livro.first_publish_year || 'xxxx';
+  const pageCount = info.pageCount || '???';
+  const subtitle = info.subtitle || '';
+  const description = info.description || 'Sem descrição fornecida.';
+  const title = livro.title || 'Sem título';
+
+  return `000 01019nam a2200301 a 4500
 001 ${livro.key ? livro.key.replace('/works/', '') : isbn}
+003 BR-Marcelo
 005 ${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14)}
-008 ${new Date().toISOString().slice(2, 10).replace(/-/g, '')}s${publishYear} xx 000 0 por
+008 ${new Date().toISOString().slice(2, 10).replace(/-/g, '')}s${publishYear} xxu||||| |||| 00| 0 por d
+
 010 __|a${isbn}
+020 __|a${isbn}
+022 __|a
 035 __|a(OpenLibrary)${livro.key || 'N/A'}
+040 __|aBR-|bpor|cBR-
+041 0_|apor
+043 __|ae-xx---
+050 14|a
+082 00|a000|223
+
 100 1_|a${authorName}
-245 10|a${title}
-260 __|c${publishYear}
-300 __|a${pageCount} p.
-504 __|aNotas: ${subtitle}
+110 2_|a
+111 2_|a
+
+240 10|a
+245 10|a${title} /|c${authorName}.
+246 30|a${subtitle}
+250 __|a1. ed.
+260 __|a[S.l.] :|b[s.n.],|c${publishYear}.
+264 _1|a[S.l.] :|b[s.n.],|c${publishYear}.
+
+300 __|a${pageCount} p. :|bil. ;|c21 cm
+336 __|atexto|btxt|2rdacontent
+337 __|asem mídia|bn|2rdamedia
+338 __|avolume|bnc|2rdacarrier
+
+490 1_|a
+500 __|a
+504 __|aInclui referências bibliográficas.
+505 0_|a
 520 __|a${description}
-856 __|u${capa}|yCapa|zLink da imagem
-856 __|uhttps://www.amazon.com.br/s?k=${isbn}|zAmazon
-856 __|u${googleLink || '#'}|zGoogle Books
-856 __|uhttps://www.goodreads.com/search?q=${encodeURIComponent(title)}|zGoodreads
-856 __|uhttps://www.librarything.com/search.php?search=${encodeURIComponent(title)}|zLibraryThing
-`; 
-    }
+546 __|aTexto em português
+
+600 10|a${authorName}|xObras.
+610 20|a
+650 _0|aLiteratura.
+651 _0|a
+
+700 1_|a
+710 2_|a
+740 0_|a
+
+776 08|iVersão impressa:|t${title}|w${isbn}
+
+800 1_|a${authorName}
+830 _0|a
+
+841 __|aBR-|bpor|cprocessamento
+852 __|aNome da Biblioteca|h
+856 41|u${capa}|yCapa|zLink da imagem
+856 42|uhttps://www.amazon.com.br/s?k=${isbn}|zAmazon
+856 43|u${googleLink || '#'}|zGoogle Books
+856 44|uhttps://www.goodreads.com/search?q=${encodeURIComponent(title)}|zGoodreads
+856 45|uhttps://www.librarything.com/search.php?search=${encodeURIComponent(title)}|zLibraryThing
+`;
+}
+
 
     function gerarMARC21FromGoogleBooks(info, isbn, capa, googleLink) {
       // Garante que há valores padrão caso os dados estejam ausentes
