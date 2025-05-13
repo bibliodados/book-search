@@ -255,7 +255,7 @@
           <input type="text" id="autor" placeholder="Digite o nome do autor">
         </div>
         <div class="form-group">
-          <button id="btnBuscarDados" onclick="buscarPorDados()">Buscar</button>
+          <button id="btnBuscarDados">Buscar</button>
         </div>
       </div>
       
@@ -265,7 +265,7 @@
           <input type="text" id="isbn" placeholder="Digite o ISBN (10 ou 13 dígitos)">
         </div>
         <div class="form-group">
-          <button id="btnBuscarISBN" onclick="buscarPorISBN()">Buscar por ISBN</button>
+          <button id="btnBuscarISBN">Buscar por ISBN</button>
         </div>
       </div>
     </div>
@@ -394,9 +394,6 @@
     // Função para exibir os resultados na página
     function mostrarResultado(data) {
       const resultado = document.getElementById('resultado');
-      
-      // Estrutura do objeto data:
-      // { title, author, edition, isbn, year, description, amazonLink, googleLink, skoobLink, capa, marc21 }
       
       resultado.innerHTML = `
         <div class="dados">
@@ -852,7 +849,24 @@
             year: livro.first_publish_year || 'N/A',
             description: 'Não disponível',
             amazonLink: isbn !== 'N/A' ? `https://www.amazon.com.br/s?k=${isbn}` : `https://www.amazon.com.br/s?k=${encodeURIComponent(livro.title || '')}`,
-            google
+            googleLink: '',
+            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            capa: capa,
+            marc21: marc21
+          });
+          return;
+        }
+        
+        mostrarErro('Nenhum livro encontrado com os critérios fornecidos.');
+      } catch (error) {
+        console.error('Erro ao buscar livro:', error);
+        mostrarErro('Ocorreu um erro ao buscar o livro. Por favor, tente novamente. Detalhe: ' + error.message);
+      }
+    }
+    
+    // Adiciona event listeners após as funções estarem definidas
+    document.getElementById('btnBuscarDados').addEventListener('click', buscarPorDados);
+    document.getElementById('btnBuscarISBN').addEventListener('click', buscarPorISBN);
     
     // Adiciona handler para a tecla Enter
     document.getElementById('titulo').addEventListener('keypress', function(e) {
