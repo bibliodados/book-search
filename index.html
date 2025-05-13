@@ -210,6 +210,44 @@
       border-radius: 0 var(--border-radius) var(--border-radius) 0;
     }
     
+    .metadata-tabs {
+      margin-top: 20px;
+    }
+    
+    .metadata-tab-buttons {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    
+    .metadata-tab-btn {
+      padding: 8px 15px;
+      background-color: #eee;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .metadata-tab-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .metadata-tab-btn:first-child {
+      border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+    
+    .metadata-tab-btn:last-child {
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+    
+    .metadata-content {
+      display: none;
+    }
+    
+    .metadata-content.active {
+      display: block;
+    }
+    
     footer {
       text-align: center;
       margin-top: 40px;
@@ -326,7 +364,7 @@
     function copiarParaClipboard(text) {
       navigator.clipboard.writeText(text)
         .then(() => {
-          alert('MARC21 copiado para a área de transferência!');
+          alert('Texto copiado para a área de transferência!');
         })
         .catch(err => {
           console.error('Erro ao copiar: ', err);
@@ -391,9 +429,57 @@
 `; 
     }
     
+    // Função para gerar Dublin Core
+    function gerarDublinCore(livro, info, isbn, capa, googleLink) {
+      const title = livro.title || info.title || 'Sem título';
+      const author = (livro.author_name && livro.author_name.length > 0) ? livro.author_name[0] : 
+                    (info.authors && info.authors.length > 0) ? info.authors[0] : 'Desconhecido';
+      const publisher = info.publisher || 'Não informado';
+      const date = livro.first_publish_year || info.publishedDate || 'xxxx';
+      const description = info.description || 'Resumo não disponível';
+      const language = info.language || 'pt';
+      const subject = info.categories ? info.categories.join(', ') : 'Não informado';
+      
+      return `<dc:title>${title}</dc:title>
+<dc:creator>${author}</dc:creator>
+<dc:subject>${subject}</dc:subject>
+<dc:description>${description}</dc:description>
+<dc:publisher>${publisher}</dc:publisher>
+<dc:date>${date}</dc:date>
+<dc:type>Text</dc:type>
+<dc:format>application/pdf</dc:format>
+<dc:identifier>urn:isbn:${isbn}</dc:identifier>
+<dc:source>${googleLink || 'N/A'}</dc:source>
+<dc:language>${language}</dc:language>
+<dc:relation>${capa || 'N/A'}</dc:relation>
+<dc:coverage>N/A</dc:coverage>
+<dc:rights>N/A</dc:rights>`;
+    }
+    
     // Função para exibir os resultados na página
     function mostrarResultado(data) {
       const resultado = document.getElementById('resultado');
+      
+      // Gerar Dublin Core
+      const dublinCore = gerarDublinCore(
+        { 
+          title: data.title,
+          author_name: data.author ? [data.author] : [],
+          first_publish_year: data.year
+        },
+        {
+          title: data.title,
+          authors: data.author ? [data.author] : [],
+          publishedDate: data.year,
+          description: data.description,
+          publisher: 'Não informado',
+          language: 'pt',
+          categories: []
+        },
+        data.isbn,
+        data.capa,
+        data.googleLink
+      );
       
       resultado.innerHTML = `
         <div class="dados">
@@ -412,16 +498,44 @@
             ${data.skoobLink ? `<a href="${data.skoobLink}" target="_blank" class="btn-link">Skoob</a>` : ''}
           </div>
           
-          <textarea id="marc21Text" readonly>${data.marc21}</textarea>
-          
-          <div class="marc-actions">
-            <button onclick="downloadMARC(document.getElementById('marc21Text').value, '${data.title.replace(/[^\w\s]/gi, '')}_marc21.txt')">Baixar MARC21 (.txt)</button>
-            <button onclick="copiarParaClipboard(document.getElementById('marc21Text').value)">Copiar MARC21</button>
+          <div class="metadata-tabs">
+            <div class="metadata-tab-buttons">
+              <button class="metadata-tab-btn active" data-tab="marc21">MARC21</button>
+              <button class="metadata-tab-btn" data-tab="dublincore">Dublin Core</button>
+            </div>
+            
+            <div id="marc21-tab" class="metadata-content active">
+              <textarea id="marc21Text" readonly>${data.marc21}</textarea>
+              <div class="marc-actions">
+                <button onclick="downloadMARC(document.getElementById('marc21Text').value, '${data.title.replace(/[^\w\s]/gi, '')}_marc21.txt')">Baixar MARC21 (.txt)</button>
+                <button onclick="copiarParaClipboard(document.getElementById('marc21Text').value)">Copiar MARC21</button>
+              </div>
+            </div>
+            
+            <div id="dublincore-tab" class="metadata-content">
+              <textarea id="dublincoreText" readonly>${dublinCore}</textarea>
+              <div class="marc-actions">
+                <button onclick="downloadMARC(document.getElementById('dublincoreText').value, '${data.title.replace(/[^\w\s]/gi, '')}_dublincore.xml')">Baixar Dublin Core (.xml)</button>
+                <button onclick="copiarParaClipboard(document.getElementById('dublincoreText').value)">Copiar Dublin Core</button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="capa">
           ${data.capa ? `<img src="${data.capa}" alt="Capa do livro ${data.title}">` : '<div style="text-align:center;padding:20px;">Sem imagem disponível</div>'}
         </div>`;
+      
+      // Adiciona event listeners para as abas de metadados
+      document.querySelectorAll('.metadata-tab-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.metadata-tab-btn').forEach(btn => btn.classList.remove('active'));
+          document.querySelectorAll('.metadata-content').forEach(content => content.classList.remove('active'));
+          
+          button.classList.add('active');
+          const tab = button.getAttribute('data-tab');
+          document.getElementById(`${tab}-tab`).classList.add('active');
+        });
+      });
       
       resultado.classList.add('show');
       ocultarLoading();
