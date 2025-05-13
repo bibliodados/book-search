@@ -397,7 +397,8 @@
 856 __|u${capa}|yCapa|zLink da imagem
 856 __|uhttps://www.amazon.com.br/s?k=${isbn}|zAmazon
 856 __|u${googleLink || '#'}|zGoogle Books
-856 __|uhttps://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(title)}|zSkoob
+856 __|uhttps://www.goodreads.com/search?q=${encodeURIComponent(title)}|zGoodreads
+856 __|uhttps://www.librarything.com/search.php?search=${encodeURIComponent(title)}|zLibraryThing
 `; 
     }
 
@@ -425,7 +426,8 @@
 856 __|u${capa}|yCapa|zLink da imagem
 856 __|uhttps://www.amazon.com.br/s?k=${isbn}|zAmazon
 856 __|u${googleLink || '#'}|zGoogle Books
-856 __|uhttps://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(title)}|zSkoob
+856 __|uhttps://www.goodreads.com/search?q=${encodeURIComponent(title)}|zGoodreads
+856 __|uhttps://www.librarything.com/search.php?search=${encodeURIComponent(title)}|zLibraryThing
 `; 
     }
     
@@ -495,7 +497,8 @@
           <div class="btn-links">
             ${data.amazonLink ? `<a href="${data.amazonLink}" target="_blank" class="btn-link">Amazon</a>` : ''}
             ${data.googleLink ? `<a href="${data.googleLink}" target="_blank" class="btn-link">Google Books</a>` : ''}
-            ${data.skoobLink ? `<a href="${data.skoobLink}" target="_blank" class="btn-link">Skoob</a>` : ''}
+            ${data.goodreadsLink ? `<a href="${data.goodreadsLink}" target="_blank" class="btn-link">Goodreads</a>` : ''}
+            ${data.librarythingLink ? `<a href="${data.librarythingLink}" target="_blank" class="btn-link">LibraryThing</a>` : ''}
           </div>
           
           <div class="metadata-tabs">
@@ -587,7 +590,8 @@
             description: info.description || 'Não disponível',
             amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
             googleLink: googleLink,
-            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(info.title || '')}`,
+            goodreadsLink: `https://www.goodreads.com/search?q=${encodeURIComponent(info.title || '').replace(/%20/g, '+')}`,
+            librarythingLink: `https://www.librarything.com/search.php?search=${encodeURIComponent(info.title || '').replace(/%20/g, '+')}`,
             capa: capa,
             marc21: marc21
           });
@@ -648,7 +652,8 @@
             description: description || 'Não disponível',
             amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
             googleLink: '',
-            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            goodreadsLink: `https://www.goodreads.com/search?q=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
+            librarythingLink: `https://www.librarything.com/search.php?search=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
             capa: capa,
             marc21: marc21
           });
@@ -713,7 +718,8 @@
             description: description || 'Não disponível',
             amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
             googleLink: '',
-            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(book.title || '')}`,
+            goodreadsLink: `https://www.goodreads.com/search?q=${encodeURIComponent(book.title || '').replace(/%20/g, '+')}`,
+            librarythingLink: `https://www.librarything.com/search.php?search=${encodeURIComponent(book.title || '').replace(/%20/g, '+')}`,
             capa: capa,
             marc21: marc21
           });
@@ -751,7 +757,8 @@
             description: 'Não disponível',
             amazonLink: `https://www.amazon.com.br/s?k=${isbn}`,
             googleLink: '',
-            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            goodreadsLink: `https://www.goodreads.com/search?q=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
+            librarythingLink: `https://www.librarything.com/search.php?search=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
             capa: capa,
             marc21: marc21
           });
@@ -888,7 +895,8 @@
             description: description || infoGoogle.description || 'Não disponível',
             amazonLink: isbn ? `https://www.amazon.com.br/s?k=${isbn}` : `https://www.amazon.com.br/s?k=${encodeURIComponent(livro.title || '')}`,
             googleLink: googleLink,
-            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            goodreadsLink: `https://www.goodreads.com/search?q=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
+            librarythingLink: `https://www.librarything.com/search.php?search=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
             capa: capa,
             marc21: marc21
           });
@@ -934,7 +942,8 @@
             description: info.description || 'Não disponível',
             amazonLink: isbn !== 'N/A' ? `https://www.amazon.com.br/s?k=${isbn}` : `https://www.amazon.com.br/s?k=${encodeURIComponent(info.title || '')}`,
             googleLink: googleLink,
-            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(info.title || '')}`,
+            goodreadsLink: `https://www.goodreads.com/search?q=${encodeURIComponent(info.title || '').replace(/%20/g, '+')}`,
+            librarythingLink: `https://www.librarything.com/search.php?search=${encodeURIComponent(info.title || '').replace(/%20/g, '+')}`,
             capa: capa,
             marc21: marc21
           });
@@ -964,7 +973,8 @@
             description: 'Não disponível',
             amazonLink: isbn !== 'N/A' ? `https://www.amazon.com.br/s?k=${isbn}` : `https://www.amazon.com.br/s?k=${encodeURIComponent(livro.title || '')}`,
             googleLink: '',
-            skoobLink: `https://www.skoob.com.br/livro/busca?nome=${encodeURIComponent(livro.title || '')}`,
+            goodreadsLink: `https://www.goodreads.com/search?q=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
+            librarythingLink: `https://www.librarything.com/search.php?search=${encodeURIComponent(livro.title || '').replace(/%20/g, '+')}`,
             capa: capa,
             marc21: marc21
           });
