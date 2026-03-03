@@ -3,77 +3,38 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Buscador de Livros — Multibases + MARC Bibliográfico e Autoridade</title>
+<title>Buscador de Livros — Multibases + ABNT + MARC + Dublin Core</title>
 <style>
-/* =========================
-   VARIÁVEIS DE TEMA
-   ========================= */
 :root{
-  /* Escuro (padrão) */
-  --bg:#0f172a;
-  --panel:#111827;
-  --muted:#94a3b8;
-  --text:#e5e7eb;
-  --primary:#38bdf8;
-  --primary-2:#0ea5e9;
-  --accent:#22c55e;
-  --warn:#f59e0b;
-  --error:#ef4444;
-  --chip:#1f2937;
-  --chip-text:#e5e7eb;
-  --card:#0b1220;
-  --surface:#0b1220;
-  --codebg:#020617;
-  --border-rgba:148,163,184;
-  --br:14px;
-  --shadow:0 10px 30px rgba(0,0,0,.35);
-  --toast-bg:#001018;
-  --toast-text:#a7f3d0;
-  --grad-a: rgba(56,189,248,.15);
-  --grad-b: rgba(34,197,94,.12);
+  --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb;
+  --primary:#38bdf8; --primary-2:#0ea5e9; --accent:#22c55e;
+  --warn:#f59e0b; --error:#ef4444; --chip:#1f2937; --chip-text:#e5e7eb;
+  --card:#0b1220; --surface:#0b1220; --codebg:#020617;
+  --border-rgba:148,163,184; --br:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
+  --toast-bg:#001018; --toast-text:#a7f3d0;
+  --grad-a: rgba(56,189,248,.15); --grad-b: rgba(34,197,94,.12);
   --sk-a:#101826; --sk-b:#0f192a;
 }
-/* Claro */
 html[data-theme="light"]{
-  --bg:#f8fafc;
-  --panel:#ffffff;
-  --muted:#475569;
-  --text:#0f172a;
-  --primary:#0ea5e9;
-  --primary-2:#0284c7;
-  --accent:#16a34a;
-  --warn:#d97706;
-  --error:#dc2626;
-  --chip:#eef2f7;
-  --chip-text:#0f172a;
-  --card:#ffffff;
-  --surface:#f8fafc;
-  --codebg:#f3f4f6;
-  --border-rgba:15,23,42;
-  --shadow:0 6px 24px rgba(2,6,23,.08);
-  --toast-bg:#e6fffa;
-  --toast-text:#065f46;
-  --grad-a: rgba(56,189,248,.18);
-  --grad-b: rgba(34,197,94,.14);
+  --bg:#f8fafc; --panel:#ffffff; --muted:#475569; --text:#0f172a;
+  --primary:#0ea5e9; --primary-2:#0284c7; --accent:#16a34a;
+  --warn:#d97706; --error:#dc2626; --chip:#eef2f7; --chip-text:#0f172a;
+  --card:#ffffff; --surface:#f8fafc; --codebg:#f3f4f6; --border-rgba:15,23,42;
+  --shadow:0 6px 24px rgba(2,6,23,.08); --toast-bg:#e6fffa; --toast-text:#065f46;
+  --grad-a: rgba(56,189,248,.18); --grad-b: rgba(34,197,94,.14);
   --sk-a:#e5e7eb; --sk-b:#f1f5f9;
 }
-/* Pref do SO na primeira carga */
 @media (prefers-color-scheme: light){
   html:not([data-theme="dark"]){
     --bg:#f8fafc; --panel:#ffffff; --muted:#475569; --text:#0f172a;
     --primary:#0ea5e9; --primary-2:#0284c7; --accent:#16a34a;
     --warn:#d97706; --error:#dc2626; --chip:#eef2f7; --chip-text:#0f172a;
     --card:#ffffff; --surface:#f8fafc; --codebg:#f3f4f6; --border-rgba:15,23,42;
-    --shadow:0 6px 24px rgba(2,6,23,.08);
-    --toast-bg:#e6fffa; --toast-text:#065f46;
+    --shadow:0 6px 24px rgba(2,6,23,.08); --toast-bg:#e6fffa; --toast-text:#065f46;
     --grad-a: rgba(56,189,248,.18); --grad-b: rgba(34,197,94,.14);
     --sk-a:#e5e7eb; --sk-b:#f1f5f9;
   }
 }
-
-/* =========================
-   BASE
-   ========================= */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -84,13 +45,10 @@ body{
     var(--bg);
   color:var(--text);
 }
-.container{max-width:1080px;margin:40px auto;padding:0 16px}
-
-/* Cabeçalho + Toggle */
+.container{max-width:1120px;margin:40px auto;padding:0 16px}
 .header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px}
 h1{
-  flex:1;
-  font-weight:800; letter-spacing:.4px; margin:0 0 8px;
+  flex:1; font-weight:800; letter-spacing:.4px; margin:0 0 8px;
   background:linear-gradient(90deg,var(--primary),#a78bfa,#f472b6);
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-align:center; font-size:clamp(28px,4vw,40px)
@@ -103,18 +61,16 @@ h1{
 }
 .theme-toggle .icon{font-size:16px}
 .theme-toggle .label{font-size:13px; opacity:.9}
-
 .sub{ text-align:center; color:var(--muted); margin-bottom:22px; font-size:14px }
 
-/* Cartão de busca */
 .card{
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
   border:1px solid rgba(var(--border-rgba),.15);
   border-radius:var(--br); padding:18px; box-shadow:var(--shadow)
 }
-.grid{display:grid; gap:12px; grid-template-columns: 2fr 2fr 1fr}
-.grid-compl{display:grid; gap:12px; grid-template-columns: 1fr 1fr 1.2fr}
-input,button,textarea{
+.grid{display:grid; gap:12px; grid-template-columns: 2fr 2fr 2fr 1fr}
+.grid-compl{display:grid; gap:12px; grid-template-columns: 1fr 1fr 1fr}
+input,button,textarea,select{
   width:100%; padding:12px 14px; border-radius:10px;
   border:1px solid rgba(var(--border-rgba),.18);
   background:var(--surface); color:var(--text); outline:none
@@ -134,7 +90,6 @@ button.ghost:hover{border-color:var(--primary); color:var(--primary)}
   border:1px solid rgba(var(--border-rgba),.25); background:var(--panel); color:var(--text); font-weight:700; cursor:pointer
 }
 
-/* Painel de fontes (chips com contraste em ambos temas) */
 .sources{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px }
 .chip{
   display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
@@ -151,12 +106,27 @@ button.ghost:hover{border-color:var(--primary); color:var(--primary)}
 .chip.err{color:#3a0303; background:rgba(239,68,68,.18); border-color:rgba(239,68,68,.38)}
 .chip.err .dot{background:var(--error)}
 
-/* Skeleton + resultados */
 .skeleton{ display:none; margin:18px 0; gap:16px; grid-template-columns: 220px 1fr }
 .skeleton.show{display:grid}
 .sk-thumb{height:320px; border-radius:12px; background:linear-gradient(90deg,var(--sk-a),var(--sk-b),var(--sk-a)); background-size:200% 100%; animation:sh 1.4s infinite}
 .sk-line{height:14px; border-radius:6px; background:linear-gradient(90deg,var(--sk-a),var(--sk-b),var(--sk-a)); background-size:200% 100%; animation:sh 1.4s infinite}
 @keyframes sh{0%{background-position:0 0}100%{background-position:200% 0}}
+
+.resultsList{display:none; margin:14px 0 0; border-top:1px solid rgba(var(--border-rgba),.12); padding-top:12px}
+.resultsList.show{display:block}
+.resGrid{display:grid; gap:10px; grid-template-columns: 1fr 1fr}
+.resItem{
+  background:var(--card);
+  border:1px solid rgba(var(--border-rgba),.18);
+  border-radius:12px; padding:12px;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.resItem img{width:54px; height:78px; object-fit:cover; border-radius:8px; border:1px solid rgba(var(--border-rgba),.22)}
+.resItem .txt{flex:1}
+.resItem .t{font-weight:800; margin:0 0 4px; font-size:14px}
+.resItem .m{margin:0; color:var(--muted); font-size:12px; line-height:1.35}
+.resItem button{margin-top:8px}
+@media (max-width:900px){ .resGrid{grid-template-columns:1fr} .grid{grid-template-columns:1fr} .grid-compl{grid-template-columns:1fr} }
 
 .result{ display:none; margin:18px 0; gap:18px; grid-template-columns: 260px 1fr }
 .result.show{display:grid}
@@ -169,7 +139,7 @@ button.ghost:hover{border-color:var(--primary); color:var(--primary)}
 .carousel img{height:68px; border-radius:8px; opacity:.85; cursor:pointer; border:1px solid transparent}
 .carousel img:hover{opacity:1; border-color:var(--primary)}
 .meta{ background:var(--card); border:1px solid rgba(var(--border-rgba),.18); border-radius:12px; padding:16px }
-.kv{display:grid; grid-template-columns: 160px 1fr; gap:8px; font-size:14px}
+.kv{display:grid; grid-template-columns: 190px 1fr; gap:8px; font-size:14px}
 .kv div:nth-child(odd){color:var(--muted)}
 .links{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
 a.btn{
@@ -194,13 +164,11 @@ textarea.code{
   border-radius:12px; padding:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   font-size:13px; line-height:1.5
 }
-.actions{display:flex; gap:8px; margin-top:8px}
+.actions{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
 .actions button{background:var(--surface); border:1px solid rgba(var(--border-rgba),.25); color:var(--text)}
 .actions button:hover{border-color:var(--primary); color:var(--primary)}
 
 footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
-
-/* Toast */
 .toast{
   position:fixed; inset:auto 20px 20px auto;
   background:var(--toast-bg); color:var(--toast-text);
@@ -208,15 +176,6 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
   padding:10px 12px; border-radius:10px; display:none; box-shadow:var(--shadow)
 }
 .toast.show{display:block}
-
-/* Responsivo */
-@media (max-width:900px){
-  .grid{grid-template-columns:1fr}
-  .grid-compl{grid-template-columns:1fr}
-  .result.show{grid-template-columns:1fr}
-  .header{flex-direction:column}
-  .theme-toggle{align-self:flex-end}
-}
 </style>
 </head>
 <body>
@@ -229,34 +188,32 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
   </div>
 
   <h1>Buscador de Livros</h1>
-  <div class="sub">Multibases (OpenLibrary, Google Books, Internet Archive, Gutenberg, Wikisource) + MARC 21 Bibliográfico e Autoridade</div>
+  <div class="sub">OpenLibrary + Google Books (lista de resultados) + Internet Archive + Gutenberg + Wikisource + Wikidata. Saídas: ABNT (NBR 6023), MARC 21 e Dublin Core.</div>
 
   <div class="card">
-    <!-- Busca principal -->
     <div class="grid">
-      <input id="titulo" placeholder="Título do livro"/>
+      <input id="titulo" placeholder="Título"/>
       <input id="autor" placeholder="Autor(a)"/>
+      <input id="assunto" placeholder="Assunto (subject)"/>
       <div style="display:flex; gap:8px;">
         <button id="buscarDados" class="cta" style="flex:1">Buscar</button>
         <button id="limpar" class="ghost" style="flex:1">Limpar</button>
       </div>
     </div>
 
-    <!-- Dados complementares -->
     <div style="margin-top:12px">
       <label><strong>Dados complementares</strong></label>
       <div class="grid-compl" style="margin-top:8px; align-items:center">
         <input id="edicao" placeholder="Edição (ex.: 2. ed.)"/>
         <input id="ano" placeholder="Ano (ex.: 2021)"/>
         <div style="display:grid; grid-template-columns: 1fr auto; gap:8px;">
-          <input id="isbn" placeholder="ISBN (10 ou 13 dígitos)"/>
+          <input id="isbn" placeholder="ISBN (10/13)"/>
           <button id="buscarISBNmini" class="small-btn" title="Buscar por ISBN">ISBN</button>
         </div>
       </div>
-      <small style="color:var(--muted)">Preencher ISBN prioriza a busca por número.</small>
+      <small style="color:var(--muted)">Se ISBN estiver preenchido, ele prevalece. Caso contrário, usa (título + autor + assunto) e mostra uma lista para você escolher.</small>
     </div>
 
-    <!-- Fontes -->
     <div class="sources" id="sources">
       <span class="chip" id="s-ol"><span class="dot"></span>OpenLibrary</span>
       <span class="chip" id="s-gb"><span class="dot"></span>Google Books</span>
@@ -267,9 +224,16 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
       <span class="chip warn"><span class="dot"></span>Amazon (link)</span>
       <span class="chip warn"><span class="dot"></span>Goodreads/LibraryThing (link)</span>
     </div>
+
+    <div class="resultsList" id="resultsList">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        <strong>Resultados</strong>
+        <small style="color:var(--muted)">Clique em “Carregar” no registro desejado.</small>
+      </div>
+      <div class="resGrid" id="resGrid" style="margin-top:10px;"></div>
+    </div>
   </div>
 
-  <!-- Skeleton -->
   <div class="skeleton" id="sk">
     <div class="sk-thumb"></div>
     <div>
@@ -280,7 +244,6 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
     </div>
   </div>
 
-  <!-- Resultado -->
   <div class="result" id="result">
     <div class="cover">
       <img id="coverMain" alt="Capa"/>
@@ -291,14 +254,26 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
       <div class="links" id="links"></div>
 
       <div class="meta-tabs">
-        <button class="meta-tab active" data-panel="marcBib">MARC Bibliográfico</button>
+        <button class="meta-tab active" data-panel="abnt">Referência ABNT</button>
+        <button class="meta-tab" data-panel="marcBib">MARC Bibliográfico</button>
         <button class="meta-tab" data-panel="marcAuth">MARC Autoridade (Autor)</button>
         <button class="meta-tab" data-panel="dc">Dublin Core</button>
         <button class="meta-tab" data-panel="json">JSON Consolidado</button>
       </div>
 
       <div class="meta-panels">
-        <div id="marcBib" class="panel active">
+        <div id="abnt" class="panel active">
+          <textarea id="abntText" class="code" readonly></textarea>
+          <div class="actions">
+            <button data-copy="abntText">Copiar</button>
+            <button data-download="abntText" data-fn="referencia_abnt.txt">Baixar .txt</button>
+          </div>
+          <small style="color:var(--muted); display:block; margin-top:8px">
+            Observação técnica: a ABNT NBR 6023:2018 exige elementos que nem sempre existem nas APIs. Campos ausentes não são inventados.
+          </small>
+        </div>
+
+        <div id="marcBib" class="panel">
           <textarea id="marcBibText" class="code" readonly></textarea>
           <div class="actions">
             <button data-copy="marcBibText">Copiar</button>
@@ -334,7 +309,7 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
     </div>
   </div>
 
-  <footer>&copy; 2025 Marcelo Diniz — Versão multibase com MARC Bibliográfico + MARC de Autoridade</footer>
+  <footer>&copy; 2026 Marcelo Diniz — Multibase + ABNT (NBR 6023) + MARC + Dublin Core</footer>
 
   <div style="text-align:center; font-size:14px; color:var(--muted); margin-top:8px;">
     💡 Apoie esta iniciativa. Projeto pessoal mantido com recursos próprios. Contribuições via PIX são voluntárias.
@@ -380,7 +355,6 @@ const $$ = (q)=>document.querySelectorAll(q);
 const toast = (msg)=>{ const t=$("#toast"); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); };
 const setChip=(id,state)=>{const el=$("#"+id); el.classList.remove('ok','err','warn'); if(state==='ok') el.classList.add('ok'); else if(state==='err') el.classList.add('err'); else if(state==='warn') el.classList.add('warn');};
 
-/* ===== Actions copy/download ===== */
 document.addEventListener('click',(e)=>{
   if(e.target.matches('[data-copy]')){
     const id=e.target.getAttribute('data-copy');
@@ -400,6 +374,7 @@ $('#buscarDados').addEventListener('click', ()=> {
   search({
     title: $('#titulo').value.trim(),
     author: $('#autor').value.trim(),
+    subject: $('#assunto').value.trim(),
     isbn: $('#isbn').value.trim(),
     edicao: $('#edicao').value.trim(),
     ano: $('#ano').value.trim()
@@ -412,9 +387,9 @@ $('#buscarISBNmini').addEventListener('click', ()=> {
 });
 $('#limpar').addEventListener('click', clearAll);
 
-['#titulo','#autor','#isbn','#edicao','#ano'].forEach(id=>{
+['#titulo','#autor','#assunto','#isbn','#edicao','#ano'].forEach(id=>{
   const el=$(id); if(!el) return;
-  el.addEventListener('keypress', (ev)=>{ 
+  el.addEventListener('keypress', (ev)=>{
     if(ev.key==='Enter'){ ev.preventDefault(); $('#buscarDados').click(); }
   });
 });
@@ -429,89 +404,311 @@ const cleanISBN = s => (s||'').replace(/[^0-9X]/gi,'');
 const nowMarcDT = ()=> new Date().toISOString().replace(/[-:.TZ]/g,'').slice(0,14);
 const yyyymmdd = (d=new Date())=> d.toISOString().slice(0,10).replace(/-/g,'');
 
-/* ===== Fetchers por fonte ===== */
+/* ===== Normalização de dados ===== */
+function uniq(arr){ return Array.from(new Set((arr||[]).filter(Boolean))); }
+function first4y(v){
+  if(!v) return '';
+  const s=String(v);
+  const m=s.match(/(\d{4})/);
+  return m?m[1]:'';
+}
+function normLang(lang){
+  if(!lang) return '';
+  const s=String(lang).toLowerCase();
+  // OpenLibrary às vezes usa "eng", "por" etc.
+  if(s.length===3) return s;
+  if(s.startsWith('pt')) return 'por';
+  if(s.startsWith('en')) return 'eng';
+  return s.slice(0,3);
+}
+function joinNonEmpty(parts, sep='; '){
+  return (parts||[]).map(s=>String(s||'').trim()).filter(Boolean).join(sep);
+}
+function surnameFirst(name){
+  if(!name) return '';
+  const parts=name.trim().split(/\s+/);
+  if(parts.length===1) return name;
+  const last=parts.pop();
+  return `${last.toUpperCase()}, ${parts.join(' ')}`;
+}
+function authorABNTList(authors){
+  const a=(authors||[]).filter(Boolean);
+  if(!a.length) return '';
+  if(a.length===1) return surnameFirst(a[0]) + '.';
+  if(a.length===2) return surnameFirst(a[0]) + '; ' + surnameFirst(a[1]) + '.';
+  if(a.length===3) return surnameFirst(a[0]) + '; ' + surnameFirst(a[1]) + '; ' + surnameFirst(a[2]) + '.';
+  return surnameFirst(a[0]) + ' et al.';
+}
+
+/* ===== Referência ABNT NBR 6023:2018 (livro) =====
+   Fato: NBR 6023 tem variações por suporte. Aqui geramos um padrão "livro" (impressa/sem URL),
+   e acrescentamos URL/acesso quando houver link.
+*/
+function buildABNT(meta){
+  const autores = authorABNTList(meta.authors);
+  const titulo = meta.title || '';
+  const subt = meta.subtitle ? `: ${meta.subtitle}` : '';
+  const ed = meta.edicao ? ` ${meta.edicao.replace(/\s+/g,' ').trim()}.` : '';
+  const local = meta.place ? `${meta.place}: ` : '';
+  const editora = meta.publisher ? `${meta.publisher}, ` : '';
+  const ano = meta.year ? `${meta.year}.` : '';
+  const extensao = meta.extent ? ` ${meta.extent}.` : (meta.pageCount ? ` ${meta.pageCount} p.` : '');
+  const isbn = meta.isbn ? ` ISBN ${meta.isbn}.` : '';
+
+  // Se existir URL de referência, adiciona (sem inventar data de acesso)
+  const url = meta.links?.google || meta.links?.openlibrary || meta.links?.archive || meta.links?.gutenberg || meta.links?.wikisource || '';
+  const online = url ? ` Disponível em: ${url}.` : '';
+
+  // Elementos de responsabilidade adicionais (não normativo “perfeito” em todos os casos; é o que dá para inferir)
+  const resp = meta.responsibilityStatement ? ` ${meta.responsibilityStatement}.` : '';
+
+  // Montagem (não adiciona campos vazios)
+  let out = '';
+  if(autores) out += autores + ' ';
+  out += `${titulo}${subt}.`;
+  if(resp) out += resp;
+  if(ed) out += ed;
+  out += ' ';
+  out += `${local}${editora}${ano}`.trim();
+  if(extensao) out += extensao.endsWith('.') ? ` ${extensao}` : `${extensao}.`;
+  out += isbn;
+  out += online;
+  return out.replace(/\s+/g,' ').trim();
+}
+
+/* ===== Google Books ===== */
 function gbToMeta(v){
+  const ids = (v.industryIdentifiers||[]).map(x=>({type:x.type, identifier:x.identifier}));
+  const isbn13 = ids.find(x=>x.type==='ISBN_13')?.identifier || '';
+  const isbn10 = ids.find(x=>x.type==='ISBN_10')?.identifier || '';
+  const cover = v.imageLinks ? (v.imageLinks.large||v.imageLinks.medium||v.imageLinks.thumbnail||'').replace('http:','https:') : '';
   return {
     source:'gb',
-    title:v.title, subtitle:v.subtitle, authors:v.authors||[],
-    publishedDate:v.publishedDate, pageCount:v.pageCount, publisher:v.publisher,
-    language:v.language, categories:v.categories||[],
-    description:v.description,
-    identifiers:v.industryIdentifiers||[],
-    cover: v.imageLinks ? (v.imageLinks.large||v.imageLinks.medium||v.imageLinks.thumbnail||'').replace('http:','https:') : '',
-    links:{ google:v.infoLink||'' }
+    title:v.title||'',
+    subtitle:v.subtitle||'',
+    authors:v.authors||[],
+    year:first4y(v.publishedDate),
+    publishedDate:v.publishedDate||'',
+    pageCount:v.pageCount||'',
+    extent: v.pageCount ? `${v.pageCount} p` : '',
+    publisher:v.publisher||'',
+    place:'', // GB normalmente não fornece local editorial
+    language:normLang(v.language),
+    subjects:v.categories||[],
+    description:v.description||'',
+    identifiers: ids,
+    isbn: isbn13 || isbn10 || '',
+    cover,
+    responsibilityStatement:'', // raramente disponível no GB
+    contributors: [], // não padronizado no GB
+    series: '', // não padronizado no GB
+    notes: '',
+    links:{ google:v.infoLink||'' },
+    provenance:{ googleBooks:{ rawKeys:Object.keys(v||{}) } }
   };
 }
-async function fromGoogleBooksByISBN(isbn){
+async function gbSearchList(q, max=6){
   try{
-    const j=await safeJson(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
-    if(!j.items || !j.items.length) return null;
-    return gbToMeta(j.items[0].volumeInfo);
+    const j=await safeJson(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=${Math.min(10,Math.max(1,max))}`);
+    const items=(j.items||[]).slice(0,max);
+    return items.map(it=>{
+      const v=it.volumeInfo||{};
+      const m=gbToMeta(v);
+      return {
+        key: 'gb:'+it.id,
+        kind:'gb',
+        title:m.title, subtitle:m.subtitle,
+        authors:m.authors,
+        year:m.year,
+        isbn:m.isbn,
+        cover:m.cover,
+        ref: { volumeId: it.id }
+      };
+    });
+  }catch{ return []; }
+}
+async function gbFetchByVolumeId(volumeId){
+  try{
+    const j=await safeJson(`https://www.googleapis.com/books/v1/volumes/${encodeURIComponent(volumeId)}`);
+    const v=j.volumeInfo||{};
+    const m=gbToMeta(v);
+    m.links.google = v.infoLink||'';
+    return m;
   }catch{ return null; }
 }
-async function fromGoogleBooksByQuery(q){
+async function gbFetchByISBN(isbn){
   try{
-    const j=await safeJson(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}`);
-    if(!j.items || !j.items.length) return null;
-    return gbToMeta(j.items[0].volumeInfo);
+    const j=await safeJson(`https://www.googleapis.com/books/v1/volumes?q=isbn:${encodeURIComponent(isbn)}`);
+    const it=(j.items||[])[0];
+    if(!it) return null;
+    return gbFetchByVolumeId(it.id);
   }catch{ return null; }
 }
-async function fromOpenLibraryByISBN(isbn){
-  try{
-    const j=await safeJson(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
-    const b=j[`ISBN:${isbn}`]; if(!b) return null;
-    const title=b.title, authors=(b.authors||[]).map(a=>a.name);
-    const cover=b.cover ? (b.cover.large||b.cover.medium||b.cover.small) : '';
-    let description='', workKey = b.works && b.works[0] ? b.works[0].key : '';
-    if(workKey){
-      try{ const w=await safeJson(`https://openlibrary.org${workKey}.json`);
-           description = typeof w.description==='object' ? (w.description.value||'') : (w.description||''); }catch{}
-    }
-    return {
-      source:'ol',
-      title, authors,
-      publishedDate: b.publish_date,
-      pageCount: b.number_of_pages,
-      publisher: (b.publishers||[]).map(p=>p.name).join('; '),
-      language: (b.languages||[])[0]?.key?.split('/').pop(),
-      categories: [],
-      description,
-      identifiers:[{type:'ISBN_13',identifier:isbn}],
-      cover,
-      links:{ openlibrary: b.url||'' },
-      extra:{ workKey, edition: (b.identifiers?.openlibrary||[])[0] }
-    };
-  }catch{ return null; }
+
+/* ===== OpenLibrary =====
+   Estratégia: listar (search.json) -> escolher item -> puxar edição (OLID) ou obra (works) + edição para campos ricos.
+*/
+function olCoverFromDoc(d){
+  if(d.cover_i) return `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`;
+  return '';
 }
-async function fromOpenLibrarySearch(title,author){
+async function olSearchList({title,author,subject}, max=8){
   try{
-    const params = new URLSearchParams();
+    const params=new URLSearchParams();
     if(title) params.set('title', title);
     if(author) params.set('author', author);
+    if(subject) params.set('subject', subject);
+    params.set('limit', String(Math.min(50, Math.max(10, max*3))));
     const j=await safeJson(`https://openlibrary.org/search.json?${params.toString()}`);
-    if(!j.docs || !j.docs.length) return null;
-    const d=j.docs[0];
-    const cover = d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg` : '';
-    let description=''; if(d.key){
-      try{ const w=await safeJson(`https://openlibrary.org${d.key}.json`);
-           description = typeof w.description==='object' ? (w.description.value||'') : (w.description||''); }catch{}
-    }
-    return {
-      source:'ol',
-      title:d.title, authors:d.author_name||[],
-      publishedDate: d.first_publish_year,
-      pageCount: d.number_of_pages_median,
-      publisher:(d.publisher||[]).slice(0,3).join('; '),
-      language:(d.language||[])[0],
-      categories:[],
-      description,
-      identifiers:[ {type:'ISBN_13',identifier:(d.isbn||[])[0]} ],
-      cover,
-      links:{ openlibrary: d.key?`https://openlibrary.org${d.key}`:'' },
-      extra:{ workKey:d.key, edition:(d.edition_key||[])[0] }
-    };
+    const docs=(j.docs||[]).slice(0,max);
+    return docs.map(d=>{
+      const olid = (d.edition_key||[])[0] ? 'OLID:'+d.edition_key[0] : '';
+      const workKey = d.key || '';
+      const isbn = (d.isbn||[]).find(x=>String(x||'').length===13) || (d.isbn||[])[0] || '';
+      return {
+        key: 'ol:'+ (olid || workKey || (d.cover_edition_key||'') || d.title),
+        kind:'ol',
+        title:d.title||'',
+        subtitle:d.subtitle||'',
+        authors:d.author_name||[],
+        year: d.first_publish_year ? String(d.first_publish_year) : '',
+        isbn,
+        cover: olCoverFromDoc(d),
+        ref:{ olid, workKey, coverEditionKey:d.cover_edition_key||'' }
+      };
+    });
+  }catch{ return []; }
+}
+async function olFetchEditionByOLID(olid){ // olid: "OL123M" (sem prefixo)
+  try{
+    const e=await safeJson(`https://openlibrary.org/books/${encodeURIComponent(olid)}.json`);
+    return e;
   }catch{ return null; }
 }
+async function olFetchWorkByKey(workKey){ // "/works/OL...W"
+  try{
+    const w=await safeJson(`https://openlibrary.org${workKey}.json`);
+    return w;
+  }catch{ return null; }
+}
+async function olFetchEditionFromRef(ref){
+  // Prioridade: OLID (edição) -> coverEditionKey -> fallback: work
+  let edition=null;
+  if(ref?.olid){
+    const olid=ref.olid.replace(/^OLID:/,'');
+    edition=await olFetchEditionByOLID(olid);
+  }else if(ref?.coverEditionKey){
+    edition=await olFetchEditionByOLID(ref.coverEditionKey);
+  }
+  let work=null;
+  if(ref?.workKey){
+    work=await olFetchWorkByKey(ref.workKey);
+  }else if(edition?.works?.[0]?.key){
+    work=await olFetchWorkByKey(edition.works[0].key);
+  }
+
+  // Contribuidores com papel
+  const contributors=(edition?.contributors||[]).map(c=>{
+    const n=c.name||'';
+    const r=c.role||'';
+    return r ? `${n} (${r})` : n;
+  });
+
+  const identifiers=[];
+  const isbn13=(edition?.isbn_13||[])[0] || '';
+  const isbn10=(edition?.isbn_10||[])[0] || '';
+  if(isbn13) identifiers.push({type:'ISBN_13', identifier:isbn13});
+  if(isbn10) identifiers.push({type:'ISBN_10', identifier:isbn10});
+  // outros ids podem existir em "identifiers"
+  if(edition?.identifiers){
+    for(const k of Object.keys(edition.identifiers)){
+      const arr=Array.isArray(edition.identifiers[k]) ? edition.identifiers[k] : [edition.identifiers[k]];
+      arr.filter(Boolean).forEach(v=>identifiers.push({type:String(k).toUpperCase(), identifier:String(v)}));
+    }
+  }
+
+  // Assuntos (obra tende a ser mais rica)
+  const subjects = uniq([...(edition?.subjects||[]), ...(work?.subjects||[])]);
+
+  // Descrição (obra tende a ter)
+  let description='';
+  const wd = work?.description;
+  if(typeof wd==='string') description=wd;
+  else if(wd && typeof wd==='object') description=wd.value||'';
+  if(!description){
+    const edd=edition?.description;
+    if(typeof edd==='string') description=edd;
+    else if(edd && typeof edd==='object') description=edd.value||'';
+  }
+
+  const title = (edition?.title || work?.title || '') || '';
+  const subtitle = edition?.subtitle || work?.subtitle || '';
+  const authors = (work?.authors||[]).map(a=>a?.author?.key).filter(Boolean); // chaves
+  // Resolver nomes de autores via /authors/<key>.json se necessário (caro). Aqui preferimos "by_statement" e "work.authors" quando já vierem nomes.
+  const byStatement = edition?.by_statement || '';
+  const authorNamesFromEdition = (edition?.authors||[]).map(a=>a?.key).filter(Boolean);
+
+  // Melhor esforço: se a lista de autores não vier com nomes, usa by_statement como responsabilidade
+  const responsibilityStatement = byStatement || '';
+
+  // Local editorial e editora
+  const place = (edition?.publish_places||[])[0] || '';
+  const publisher = Array.isArray(edition?.publishers) ? edition.publishers.join('; ') : (edition?.publishers||'');
+  const publishDate = edition?.publish_date || '';
+  const year = first4y(publishDate) || (work?.first_publish_date ? first4y(work.first_publish_date) : '');
+
+  // Extensão/paginação
+  const extent = edition?.pagination || (edition?.number_of_pages ? `${edition.number_of_pages} p` : '');
+  const pageCount = edition?.number_of_pages || '';
+
+  // Série / notas
+  const series = Array.isArray(edition?.series) ? edition.series.join('; ') : (edition?.series||'');
+  let notes='';
+  if(typeof edition?.notes==='string') notes=edition.notes;
+  else if(edition?.notes && typeof edition.notes==='object') notes=edition.notes.value||'';
+
+  // Idioma (edition.languages = [{key:'/languages/eng'}])
+  const language = normLang((edition?.languages||[])[0]?.key?.split('/').pop());
+
+  // Capas: se tiver covers, montar URLs
+  const extraCovers=[];
+  if(Array.isArray(edition?.covers)){
+    edition.covers.slice(0,6).forEach(id=>extraCovers.push(`https://covers.openlibrary.org/b/id/${id}-L.jpg`));
+  }
+
+  return {
+    source:'ol',
+    title, subtitle,
+    authors: [], // manteremos nomes vindos do search; aqui fica vazio por custo de resolução
+    year, publishedDate: publishDate,
+    pageCount, extent,
+    publisher, place,
+    language,
+    subjects,
+    description,
+    identifiers,
+    isbn: isbn13 || isbn10 || '',
+    cover: extraCovers[0] || '',
+    responsibilityStatement,
+    contributors,
+    series,
+    notes,
+    links:{
+      openlibrary: edition?.key ? `https://openlibrary.org${edition.key}` : (work?.key ? `https://openlibrary.org${work.key}` : '')
+    },
+    extraCovers,
+    provenance:{
+      openLibrary:{
+        editionKey: edition?.key||'',
+        workKey: work?.key||'',
+        hasEdition: !!edition,
+        hasWork: !!work
+      }
+    }
+  };
+}
+
+/* ===== Internet Archive / Gutenberg / Wikisource / Wikidata ===== */
 async function fromInternetArchive(q){
   try{
     const query = `(${q}) AND mediatype:texts`;
@@ -520,26 +717,60 @@ async function fromInternetArchive(q){
     const d=j.response.docs[0];
     return {
       source:'ia',
-      title:d.title, authors: d.creator ? [d.creator] : [],
-      publishedDate:d.year, language:d.language,
+      title:d.title||'',
+      subtitle:'',
+      authors: d.creator ? [d.creator] : [],
+      year: d.year ? String(d.year) : '',
+      publishedDate: d.year ? String(d.year) : '',
+      pageCount:'',
+      extent:'',
+      publisher:'',
+      place:'',
+      language:normLang(d.language),
+      subjects:[],
+      description:'',
+      identifiers:[],
+      isbn:'',
       cover: `https://archive.org/services/img/${d.identifier}`,
-      links:{ archive:`https://archive.org/details/${d.identifier}` }
+      responsibilityStatement:'',
+      contributors:[],
+      series:'',
+      notes:'',
+      links:{ archive:`https://archive.org/details/${d.identifier}` },
+      provenance:{ internetArchive:{ identifier:d.identifier } }
     };
   }catch{ return null; }
 }
 function gutToMeta(b){
   return {
     source:'gut',
-    title:b.title, authors:b.authors?.map(a=>a.name)||[],
-    language:(b.languages||[])[0],
-    publishedDate:'', categories: b.subjects||[],
+    title:b.title||'',
+    subtitle:'',
+    authors:(b.authors||[]).map(a=>a.name).filter(Boolean),
+    year:'',
+    publishedDate:'',
+    pageCount:'',
+    extent:'',
+    publisher:'',
+    place:'',
+    language:normLang((b.languages||[])[0]),
+    subjects: (b.subjects||[]),
+    description:'',
+    identifiers:[],
+    isbn:'',
     cover:b.formats?.['image/jpeg']||'',
-    links:{ gutenberg:b.formats?.['text/html']||b.formats?.['application/epub+zip']||'' }
+    responsibilityStatement:'',
+    contributors:[],
+    series:'',
+    notes:'',
+    links:{ gutenberg:b.formats?.['text/html']||b.formats?.['application/epub+zip']||'' },
+    provenance:{ gutendex:{ id:b.id } }
   };
 }
-async function fromGutendex(title,author){
+async function fromGutendex(title,author,subject){
   try{
-    const j=await safeJson(`https://gutendex.com/books?search=${encodeURIComponent(title + (author?(' '+author):''))}`);
+    const s=[title,author,subject].filter(Boolean).join(' ');
+    const j=await safeJson(`https://gutendex.com/books?search=${encodeURIComponent(s)}`);
     if(!j.results || !j.results.length) return null;
     return gutToMeta(j.results[0]);
   }catch{ return null; }
@@ -555,7 +786,6 @@ async function checkWikisource(title){
     return { source:'ws', exists:false };
   }catch{ return { source:'ws', exists:false }; }
 }
-/* Wikidata (autoridade) */
 async function getWikidataForAuthor(name){
   try{
     const search=await safeJson(`https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(name)}&language=pt&format=json&origin=*`);
@@ -569,85 +799,123 @@ async function getWikidataForAuthor(name){
     function valTime(prop){ const v=val(prop); if(!v || !v.time) return ''; return v.time.replace('+','').slice(1,11); }
     const VIAF = val('P214'), ISNI = val('P213');
     const birth = valTime('P569'), death = valTime('P570');
-    const placeBirth = val('P19')?.id, placeDeath = val('P20')?.id, citizen = val('P27')?.id;
-    const occupations = (e.claims?.P106||[]).map(c=>c.mainsnak?.datavalue?.value?.id).slice(0,5);
-    const ids = [placeBirth,placeDeath,citizen,...occupations].filter(Boolean);
-    let labels={};
-    if(ids.length){
-      const r=await safeJson(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids.join('|')}&props=labels&languages=pt|en&format=json&origin=*`);
-      for(const k in r.entities){ labels[k]= r.entities[k].labels.pt?.value || r.entities[k].labels.en?.value || ''; }
-    }
-    return { id, label:lab, aliases, VIAF, ISNI, birth, death,
-             placeBirth: labels[placeBirth]||'', placeDeath: labels[placeDeath]||'',
-             citizen: labels[citizen]||'',
-             occupations: occupations.map(id=>labels[id]||'').filter(Boolean) };
+    return { id, label:lab, aliases, VIAF, ISNI, birth, death };
   }catch{ return null; }
 }
 
-/* ===== Helpers de formatação ===== */
-function surnameFirst(name){
-  if(!name) return 'Desconhecido';
-  const parts=name.trim().split(/\s+/);
-  if(parts.length===1) return name;
-  const last=parts.pop();
-  return `${last}, ${parts.join(' ')}`;
+/* ===== Merge (consolidação) ===== */
+function prefer(a,b){ return (a!==undefined && a!==null && String(a).trim()!=='') ? a : b; }
+function mergeMeta(base, plus){
+  if(!plus) return base;
+  const out = {...base};
+
+  // Campos principais
+  out.title = prefer(out.title, plus.title);
+  out.subtitle = prefer(out.subtitle, plus.subtitle);
+  out.authors = (out.authors && out.authors.length) ? out.authors : (plus.authors||[]);
+  out.year = prefer(out.year, plus.year);
+  out.publishedDate = prefer(out.publishedDate, plus.publishedDate);
+  out.pageCount = prefer(out.pageCount, plus.pageCount);
+  out.extent = prefer(out.extent, plus.extent);
+  out.publisher = prefer(out.publisher, plus.publisher);
+  out.place = prefer(out.place, plus.place);
+  out.language = prefer(out.language, plus.language);
+  out.description = prefer(out.description, plus.description);
+  out.series = prefer(out.series, plus.series);
+  out.notes = prefer(out.notes, plus.notes);
+  out.responsibilityStatement = prefer(out.responsibilityStatement, plus.responsibilityStatement);
+
+  // Listas
+  out.subjects = uniq([...(out.subjects||[]), ...(plus.subjects||[])]);
+  out.contributors = uniq([...(out.contributors||[]), ...(plus.contributors||[])]);
+  out.identifiers = uniq([...(out.identifiers||[]), ...(plus.identifiers||[])].map(x=>JSON.stringify(x))).map(x=>JSON.parse(x));
+
+  // ISBN (preferir ISBN_13)
+  const outIsbn13 = (out.identifiers||[]).find(x=>x.type==='ISBN_13')?.identifier || '';
+  const plusIsbn13 = (plus.identifiers||[]).find(x=>x.type==='ISBN_13')?.identifier || '';
+  out.isbn = prefer(out.isbn, outIsbn13 || plusIsbn13 || plus.isbn);
+
+  // Capa e links
+  out.cover = prefer(out.cover, plus.cover);
+  out.extraCovers = uniq([...(out.extraCovers||[]), ...(plus.extraCovers||[]), plus.cover].filter(Boolean));
+  out.links = {...(out.links||{}), ...(plus.links||{})};
+
+  // Proveniência
+  out.provenance = {...(out.provenance||{}), ...(plus.provenance||{})};
+
+  // Fonte dominante (a primeira que trouxe o núcleo)
+  out.source = out.source || plus.source;
+
+  return out;
 }
+
+/* ===== MARC / DC ===== */
 function buildMARCbib(meta){
   const isbn = meta.isbn || '';
   const author = (meta.authors||[])[0] || 'Desconhecido';
-  const authorNorm = surnameFirst(author);
-  const pubYear = (meta.publishedDate||'').toString().slice(0,4) || 'xxxx';
-  const pages = meta.pageCount || '???';
+  const authorNorm = surnameFirst(author) || 'DESCONHECIDO';
+  const pubYear = meta.year || 'xxxx';
+  const pages = meta.pageCount || (meta.extent||'').replace(/[^\d]/g,'') || '???';
   const title = meta.title || 'Sem título';
   const subtitle = meta.subtitle || '';
   const desc = (meta.description||'').replace(/\r?\n/g,' ').slice(0,2000);
   const cover = meta.cover || '';
-  const googleLink = meta.links?.google || '';
+  const linkBase = meta.links?.google || meta.links?.openlibrary || meta.links?.archive || meta.links?.gutenberg || '';
   const today = yyyymmdd();
+  const place = meta.place || '[S.l.]';
+  const publisher = meta.publisher || '[s.n.]';
+  const ed = meta.edicao || '';
+  const extent = meta.extent || (meta.pageCount ? `${meta.pageCount} p.` : '');
+
+  const subjects = (meta.subjects||[]).slice(0,6);
+  const subj1 = subjects[0] || 'Obras diversas.';
+  const otherAuthors = (meta.authors||[]).slice(1);
+
   return [
 `=LDR  01019nam a2200301 a 4500`,
-`=001  ${isbn||meta.extra?.workKey||'ID'}`,
+`=001  ${isbn||'ID'}`,
 `=003  BR-Marcelo`,
 `=005  ${nowMarcDT()}`,
 `=008  ${today}s${pubYear}    xxu||||| |||| 00| 0 por d`,
-`=010  __$a${isbn}`,
 `=020  __$a${isbn}`,
-`=035  __$a(${(meta.source||'SRC').toUpperCase()})${isbn||meta.extra?.workKey||'N/A'}`,
+`=035  __$a(${(meta.source||'SRC').toUpperCase()})${isbn||'N/A'}`,
 `=040  __$aBR-$bpor$cBR-`,
-`=041  0_$apor`,
+`=041  0_$a${meta.language||'por'}`,
 `=100  1_$a${authorNorm}`,
-`=245  10$a${title}${subtitle?`: ${subtitle}`:''} /$c${authorNorm}.`,
-`=250  __$a${meta.edicao||'1. ed.'}`,
-`=260  __$a[S.l.] :$b[s.n.],$c${pubYear}.`,
-`=300  __$a${pages} p. :$bil. ;$c21 cm`,
+`=245  10$a${title}${subtitle?`: ${subtitle}`:''} /$c${meta.responsibilityStatement ? meta.responsibilityStatement : author}.`,
+(ed?`=250  __$a${ed}`:'=250  __$a1. ed.'),
+`=264  _1$a${place} :$b${publisher},$c${pubYear}.`,
+`=300  __$a${extent || '1 v.'}`,
 `=336  __$atexto$btxt$2rdacontent`,
 `=337  __$asem mídia$bn$2rdamedia`,
 `=338  __$avolume$bnc$2rdacarrier`,
-`=504  __$aInclui referências bibliográficas.`,
+(meta.series?`=490  0_$a${meta.series}`:''),
+(meta.notes?`=500  __$a${String(meta.notes).replace(/\r?\n/g,' ').slice(0,300)}`:''),
 `=520  __$a${desc||'Resumo não disponível.'}`,
-`=546  __$aTexto em português.`,
-`=650  _0$a${(meta.categories||[])[0]||'Obras diversas.'}`,
-`=700  1_$a${(meta.authors||[]).slice(1).join(' ; ')}`,
-`=776  08$iVersão impressa:$t${title}$w${isbn}`,
-`=856  41$u${cover}$yCapa$zLink da imagem`,
+`=650  _0$a${subj1}`,
+...subjects.slice(1).map(s=>`=650  _0$a${s}`),
+(otherAuthors.length?`=700  1_$a${surnameFirst(otherAuthors[0])}`:''),
+(cover?`=856  41$u${cover}$yCapa$zLink da imagem`:''),
+(linkBase?`=856  40$u${linkBase}$yAcesso online`:''),
 `=856  42$u${isbn?`https://www.amazon.com.br/s?k=${isbn}`: `https://www.amazon.com.br/s?k=${encodeURIComponent(title)}`}$zAmazon`,
-`=856  43$u${googleLink}$zGoogle Books`,
 `=856  44$uhttps://www.goodreads.com/search?q=${encodeURIComponent(title)}$zGoodreads`,
 `=856  45$uhttps://www.librarything.com/search.php?search=${encodeURIComponent(title)}$zLibraryThing`
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 }
 function buildDublinCore(meta){
   const isbn = meta.isbn||'';
   return [
 `<dc:title>${meta.title||'Sem título'}</dc:title>`,
 `<dc:creator>${(meta.authors||[]).join('; ')||'Desconhecido'}</dc:creator>`,
-`<dc:subject>${(meta.categories||[]).join('; ')||'N/A'}</dc:subject>`,
+`<dc:subject>${(meta.subjects||[]).join('; ')||'N/A'}</dc:subject>`,
 `<dc:description>${(meta.description||'Resumo não disponível').replace(/\r?\n/g,' ')}</dc:description>`,
 `<dc:publisher>${meta.publisher||'Não informado'}</dc:publisher>`,
-`<dc:date>${(meta.publishedDate||'xxxx').toString().slice(0,10)}</dc:date>`,
-`<dc:language>${meta.language||'pt'}</dc:language>`,
+`<dc:coverage>${meta.place||'N/A'}</dc:coverage>`,
+`<dc:date>${meta.year||'xxxx'}</dc:date>`,
+`<dc:type>Text</dc:type>`,
+`<dc:language>${meta.language||'por'}</dc:language>`,
 `<dc:identifier>${isbn?('urn:isbn:'+isbn):'N/A'}</dc:identifier>`,
-`<dc:source>${meta.links?.google||meta.links?.openlibrary||meta.links?.archive||'N/A'}</dc:source>`,
+`<dc:source>${meta.links?.google||meta.links?.openlibrary||meta.links?.archive||meta.links?.gutenberg||'N/A'}</dc:source>`,
 `<dc:relation>${meta.cover||'N/A'}</dc:relation>`,
 `<dc:rights>N/A</dc:rights>`
   ].join('\n');
@@ -655,7 +923,7 @@ function buildDublinCore(meta){
 function buildMARCAuthority(author, wd){
   if(!author && !wd) return 'Sem dados de autoridade encontrados.';
   const name = author || wd?.label || 'Desconhecido';
-  const nameNorm = surnameFirst(name);
+  const nameNorm = surnameFirst(name) || 'DESCONHECIDO';
   const dates = [wd?.birth, wd?.death].filter(Boolean).map(d=>d.slice(0,4)).join('-');
   const today = yyyymmdd();
   const lines = [];
@@ -668,15 +936,10 @@ function buildMARCAuthority(author, wd){
   if(wd?.VIAF) lines.push(`=024  7_$a${wd.VIAF}$2viaf`);
   lines.push(`=035  __$a(WIKIDATA)${wd?.id||''}`);
   lines.push(`=040  __$aBR-$bpor$cBR-`);
-  lines.push(`=046  __$f${wd?.birth||''}$g${wd?.death||''}`);
   let d100 = `=100  1_$a${nameNorm}`;
   if(dates) d100 += `,$d${dates}`;
   lines.push(d100);
   (wd?.aliases||[]).forEach(v=>{ lines.push(`=400  1_$a${surnameFirst(v)}`); });
-  if(wd?.placeBirth) lines.push(`=370  __$a${wd.placeBirth}`);
-  if(wd?.placeDeath) lines.push(`=370  __$b${wd.placeDeath}`);
-  if(wd?.citizen) lines.push(`=370  __$c${wd.citizen}`);
-  if(wd?.occupations?.length) lines.push(`=374  __$a${wd.occupations.join(' ; ')}`);
   lines.push(`=667  __$aRegistro de autoridade gerado automaticamente a partir de Wikidata.`);
   lines.push(`=670  __$aWikidata ${wd?.id||''}, acesso em ${today}.`);
   return lines.join('\n');
@@ -685,13 +948,13 @@ function buildMARCAuthority(author, wd){
 /* ===== UI ===== */
 function setSkeleton(on){ $('#sk').classList.toggle('show', !!on); }
 function setResult(on){ $('#result').classList.toggle('show', !!on); }
+function setResultsList(on){ $('#resultsList').classList.toggle('show', !!on); }
 function clearAll(){
-  ['#titulo','#autor','#isbn','#edicao','#ano'].forEach(sel=>{ const el=$(sel); if(el) el.value=''; });
-  setResult(false); setSkeleton(false);
+  ['#titulo','#autor','#assunto','#isbn','#edicao','#ano'].forEach(sel=>{ const el=$(sel); if(el) el.value=''; });
+  setResult(false); setSkeleton(false); setResultsList(false);
+  $('#resGrid').innerHTML='';
   ['s-ol','s-gb','s-ia','s-gut','s-ws','s-wd'].forEach(id=>{ const el=$("#"+id); el.classList.remove('ok','err','warn'); });
 }
-
-/* ===== Populate ===== */
 function populate(meta, authority, sourcesStatus){
   setChip('s-ol', sourcesStatus.ol?'ok':'');
   setChip('s-gb', sourcesStatus.gb?'ok':'');
@@ -700,7 +963,7 @@ function populate(meta, authority, sourcesStatus){
   setChip('s-ws', sourcesStatus.ws?'ok':'');
   setChip('s-wd', authority?.wd?'ok':'');
 
-  const covers = Array.from(new Set([meta.cover, ...(meta.extraCovers||[])] )).filter(Boolean);
+  const covers = uniq([meta.cover, ...(meta.extraCovers||[])]).filter(Boolean);
   $('#coverMain').src = covers[0] || '';
   const car = $('#carousel'); car.innerHTML='';
   covers.slice(1).forEach(url=>{
@@ -710,17 +973,27 @@ function populate(meta, authority, sourcesStatus){
   });
 
   const kv=$('#kv'); kv.innerHTML='';
-  const addKV=(k,v)=>{ const kd=document.createElement('div'); kd.textContent=k; const vd=document.createElement('div'); vd.textContent=v||'N/A'; kv.appendChild(kd); kv.appendChild(vd); };
+  const addKV=(k,v)=>{ const kd=document.createElement('div'); kd.textContent=k; const vd=document.createElement('div'); vd.textContent=(v!==undefined && v!==null && String(v).trim()!=='')? String(v) : 'N/A'; kv.appendChild(kd); kv.appendChild(vd); };
+
   addKV('Título', meta.title);
-  addKV('Subtítulo', meta.subtitle||'');
-  addKV('Autor(es)', (meta.authors||[]).join('; '));
-  addKV('Edição', meta.edicao||'');
-  addKV('Ano', (meta.publishedDate||'').toString().slice(0,4));
-  addKV('Páginas', meta.pageCount||'');
-  addKV('Idioma', meta.language||'');
-  addKV('Assuntos', (meta.categories||[]).join('; '));
-  addKV('Editora', meta.publisher||'');
-  addKV('ISBN', meta.isbn||'');
+  addKV('Subtítulo', meta.subtitle);
+  addKV('Autor(es)', joinNonEmpty(meta.authors, '; '));
+  addKV('Indicação de responsabilidade', meta.responsibilityStatement);
+  addKV('Contribuidores (com papel)', joinNonEmpty(meta.contributors, '; '));
+  addKV('Edição', meta.edicao || '');
+  addKV('Ano', meta.year || first4y(meta.publishedDate));
+  addKV('Data publicada', meta.publishedDate || '');
+  addKV('Local', meta.place || '');
+  addKV('Editora', meta.publisher || '');
+  addKV('Extensão/Paginação', meta.extent || (meta.pageCount?`${meta.pageCount} p`:''));
+  addKV('Idioma', meta.language || '');
+  addKV('Série', meta.series || '');
+  addKV('Assuntos', joinNonEmpty((meta.subjects||[]).slice(0,20), '; '));
+  addKV('Notas', meta.notes || '');
+  addKV('Identificadores', (meta.identifiers||[]).map(i=>`${i.type}:${i.identifier}`).slice(0,12).join(' | '));
+  addKV('ISBN', meta.isbn || '');
+  addKV('Fonte dominante (merge)', meta.source || '');
+  addKV('Proveniência', JSON.stringify(meta.provenance||{}, null, 0));
 
   const links=$('#links'); links.innerHTML='';
   const lb = (href,txt)=>{ if(!href) return; const a=document.createElement('a'); a.href=href; a.target='_blank'; a.className='btn'; a.textContent=txt; links.appendChild(a); };
@@ -733,75 +1006,128 @@ function populate(meta, authority, sourcesStatus){
   lb(`https://www.goodreads.com/search?q=${encodeURIComponent(meta.title||'')}`,'Goodreads');
   lb(`https://www.librarything.com/search.php?search=${encodeURIComponent(meta.title||'')}`,'LibraryThing');
 
+  $('#abntText').value = buildABNT(meta);
   $('#marcBibText').value = buildMARCbib(meta);
   $('#dcText').value = buildDublinCore(meta);
   $('#marcAuthText').value = buildMARCAuthority( (meta.authors||[])[0], authority?.wd || null );
-  $('#jsonText').value = JSON.stringify({meta, authority}, null, 2);
+  $('#jsonText').value = JSON.stringify({meta, authority, sourcesStatus}, null, 2);
 
   setSkeleton(false); setResult(true);
   $('#result').scrollIntoView({behavior:'smooth'});
 }
 
-/* ===== Merge ===== */
-function prefer(a,b){ return a ?? b; }
-function mergeMeta(base, plus){
-  if(!plus) return base;
-  return {
-    source: base.source || plus.source,
-    title: prefer(base.title, plus.title),
-    subtitle: base.subtitle || plus.subtitle,
-    authors: (base.authors?.length? base.authors: plus.authors)||[],
-    publishedDate: prefer(base.publishedDate, plus.publishedDate),
-    pageCount: prefer(base.pageCount, plus.pageCount),
-    publisher: prefer(base.publisher, plus.publisher),
-    language: prefer(base.language, plus.language),
-    categories: (base.categories?.length? base.categories: plus.categories)||[],
-    description: prefer(base.description, plus.description),
-    identifiers: (base.identifiers||[]).concat(plus.identifiers||[]),
-    isbn: base.isbn || plus.identifiers?.find(i=>i.type && i.type.startsWith('ISBN'))?.identifier || '',
-    cover: base.cover || plus.cover || '',
-    extraCovers: [...new Set([...(base.extraCovers||[]), plus.cover].filter(Boolean))],
-    links: {...(base.links||{}), ...(plus.links||{})},
-    extra: {...(base.extra||{}), ...(plus.extra||{})},
-    // complementares
-    edicao: base.edicao || plus.edicao
-  };
+/* ===== Lista de resultados ===== */
+function renderCandidates(cands){
+  const grid=$('#resGrid'); grid.innerHTML='';
+  if(!cands.length){
+    setResultsList(false);
+    return;
+  }
+  setResultsList(true);
+  cands.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='resItem';
+    const img=document.createElement('img');
+    img.src=c.cover||'';
+    img.alt='Capa';
+    const txt=document.createElement('div');
+    txt.className='txt';
+    const t=document.createElement('p');
+    t.className='t';
+    t.textContent = c.title + (c.subtitle?`: ${c.subtitle}`:'');
+    const m=document.createElement('p');
+    m.className='m';
+    const a=(c.authors||[]).slice(0,3).join('; ');
+    const y=c.year||'';
+    const isbn=c.isbn?`ISBN: ${c.isbn}`:'';
+    m.textContent = [a,y,isbn,`Fonte: ${c.kind.toUpperCase()}`].filter(Boolean).join(' · ');
+    const btn=document.createElement('button');
+    btn.className='small-btn';
+    btn.textContent='Carregar';
+    btn.addEventListener('click', ()=> loadCandidate(c));
+    txt.appendChild(t); txt.appendChild(m); txt.appendChild(btn);
+    div.appendChild(img); div.appendChild(txt);
+    grid.appendChild(div);
+  });
 }
 
-/* ===== Orquestração da busca ===== */
-async function search({title,author,isbn,edicao,ano}){
-  setResult(false); setSkeleton(true);
+/* ===== Orquestração principal ===== */
+async function search({title,author,subject,isbn,edicao,ano}){
+  setResult(false); setSkeleton(true); setResultsList(false);
+  $('#resGrid').innerHTML='';
   ['s-ol','s-gb','s-ia','s-gut','s-ws','s-wd'].forEach(id=>{ const el=$("#"+id); el.classList.remove('ok','err','warn'); });
 
-  let meta=null, status={ol:false,gb:false,ia:false,gut:false,ws:false,wd:false};
-
   try{
+    let meta=null;
+    let status={ol:false,gb:false,ia:false,gut:false,ws:false,wd:false};
+
+    // 1) Se ISBN: buscar diretamente (GB + OL) e já consolidar (sem lista)
     if(isbn){
       isbn = cleanISBN(isbn);
-      const g = await fromGoogleBooksByISBN(isbn); if(g){ status.gb=true; g.isbn = isbn; meta = mergeMeta({isbn}, g); }
-      const o = await fromOpenLibraryByISBN(isbn); if(o){ status.ol=true; o.isbn = isbn; meta = meta? mergeMeta(meta,o): {...o, isbn}; }
-    } else {
-      const o = await fromOpenLibrarySearch(title,author); if(o){ status.ol=true; meta = {...o, isbn: (o.identifiers?.find(i=>i.type && i.type.startsWith('ISBN'))?.identifier)||''}; }
-      const q = [title?`intitle:${title}`:'', author?`inauthor:${author}`:''].filter(Boolean).join('+');
-      const g = await fromGoogleBooksByQuery(q||title||author||''); if(g){ status.gb=true; meta = meta? mergeMeta(meta,g): g; }
+      const g = await gbFetchByISBN(isbn);
+      if(g){ status.gb=true; g.isbn = isbn; meta = mergeMeta({isbn}, g); }
+      // OpenLibrary: via ISBN não é tão “rico”; preferimos puxar a edição via search + OLID quando possível
+      // Estratégia: usar search com isbn para obter edition_key e depois puxar edição
+      const olCands = await olSearchList({title:isbn, author:'', subject:''}, 6);
+      const bestOl = olCands.find(x=>x.isbn===isbn) || olCands[0];
+      if(bestOl && bestOl.ref){
+        const olRich = await olFetchEditionFromRef(bestOl.ref);
+        if(olRich){
+          status.ol=true;
+          // reaproveitar autores do candidato (porque não resolvemos nomes via /authors/)
+          olRich.authors = (bestOl.authors||[]);
+          olRich.isbn = isbn || olRich.isbn;
+          meta = meta ? mergeMeta(meta, olRich) : mergeMeta({isbn}, olRich);
+        }
+      }
+      if(!meta){
+        setSkeleton(false);
+        toast('Nenhum resultado por ISBN. Tente título/autor/assunto.');
+        return;
+      }
+      // complementares do usuário
+      if(edicao) meta.edicao = edicao;
+      if(ano) meta.year = String(ano).slice(0,4);
+
+      // enriquecer com IA/Gutenberg/Wikisource/Wikidata (melhor esforço)
+      const qIA = [meta.title, (meta.authors||[])[0]].filter(Boolean).join(' ');
+      const ia = await fromInternetArchive(qIA); if(ia){ status.ia=true; meta = mergeMeta(meta, ia); }
+      const gut = await fromGutendex(meta.title||title||'', (meta.authors||[])[0]||author||'', subject||''); if(gut){ status.gut=true; meta = mergeMeta(meta, gut); }
+      const ws = await checkWikisource(meta.title||title||''); if(ws && ws.exists){ status.ws=true; meta.links = {...(meta.links||{}), wikisource: ws.url}; }
+
+      let authority=null;
+      const authName = (meta.authors||[])[0];
+      if(authName){
+        const wd = await getWikidataForAuthor(authName);
+        if(wd){ status.wd=true; authority = { wd }; }
+      }
+
+      populate(meta, authority, status);
+      setSkeleton(false);
+      return;
     }
 
-    if(!meta) { setSkeleton(false); toast('Nenhum resultado. Ajuste os termos ou informe o ISBN.'); return; }
+    // 2) Sem ISBN: gerar lista de candidatos (OL + GB) e deixar o usuário escolher
+    const qParts=[];
+    if(title) qParts.push(`intitle:${title}`);
+    if(author) qParts.push(`inauthor:${author}`);
+    if(subject) qParts.push(`subject:${subject}`);
+    const qGB = qParts.length ? qParts.join('+') : [title,author,subject].filter(Boolean).join(' ');
+    const [olList, gbList] = await Promise.all([
+      olSearchList({title,author,subject}, 8),
+      gbSearchList(qGB || ' ', 6)
+    ]);
 
-    // aplicar dados complementares
-    if(edicao) meta.edicao = edicao;
-    if(ano) meta.publishedDate = ano + (meta.publishedDate && String(meta.publishedDate).length>4 ? String(meta.publishedDate).slice(4) : '');
+    const mergedList = [...olList, ...gbList].slice(0,12);
+    setSkeleton(false);
+    if(!mergedList.length){
+      toast('Nenhum resultado. Ajuste os termos ou informe o ISBN.');
+      return;
+    }
+    renderCandidates(mergedList);
 
-    const qIA = [meta.title, (meta.authors||[])[0]].filter(Boolean).join(' ');
-    const ia = await fromInternetArchive(qIA); if(ia){ status.ia=true; meta = mergeMeta(meta, ia); }
-    const gut = await fromGutendex(meta.title||title||'', (meta.authors||[])[0]||author||''); if(gut){ status.gut=true; meta = mergeMeta(meta, gut); }
-    const ws = await checkWikisource(meta.title||title||''); if(ws && ws.exists){ status.ws=true; meta.links = {...(meta.links||{}), wikisource: ws.url}; }
-
-    let authority=null;
-    const authName = (meta.authors||[])[0];
-    if(authName){ const wd = await getWikidataForAuthor(authName); if(wd){ status.wd=true; authority = { wd }; } }
-
-    populate(meta, authority, status);
+    // Guardar último contexto para carregar candidato
+    window.__lastSearchContext = { title, author, subject, edicao, ano };
   }catch(err){
     setSkeleton(false);
     toast('Erro de rede ou CORS. Tente novamente.');
@@ -809,7 +1135,89 @@ async function search({title,author,isbn,edicao,ano}){
   }
 }
 
-/* ===== Abas de metadado ===== */
+/* ===== Carregar candidato selecionado ===== */
+async function loadCandidate(cand){
+  setResult(false); setSkeleton(true);
+
+  const ctx = window.__lastSearchContext || {};
+  let meta = {
+    source: cand.kind,
+    title: cand.title||'',
+    subtitle: cand.subtitle||'',
+    authors: cand.authors||[],
+    year: cand.year||'',
+    publishedDate: cand.year||'',
+    pageCount:'',
+    extent:'',
+    publisher:'',
+    place:'',
+    language:'',
+    subjects:[],
+    description:'',
+    identifiers:[],
+    isbn: cand.isbn||'',
+    cover: cand.cover||'',
+    responsibilityStatement:'',
+    contributors:[],
+    series:'',
+    notes:'',
+    links:{},
+    extraCovers: cand.cover ? [cand.cover] : [],
+    provenance:{}
+  };
+
+  let status={ol:false,gb:false,ia:false,gut:false,ws:false,wd:false};
+
+  try{
+    // 1) Fonte primária do candidato
+    if(cand.kind==='gb'){
+      const g = await gbFetchByVolumeId(cand.ref.volumeId);
+      if(g){ status.gb=true; meta = mergeMeta(meta, g); }
+    }else if(cand.kind==='ol'){
+      const rich = await olFetchEditionFromRef(cand.ref);
+      if(rich){
+        status.ol=true;
+        // manter autores do candidato (nomes já disponíveis)
+        rich.authors = (cand.authors||[]);
+        // manter capa do candidato se mais forte
+        if(cand.cover && !rich.cover) rich.cover = cand.cover;
+        meta = mergeMeta(meta, rich);
+      }else{
+        status.ol=true; // pelo menos veio do OL search
+        meta.links.openlibrary = cand.ref.workKey ? `https://openlibrary.org${cand.ref.workKey}` : '';
+      }
+    }
+
+    // 2) Se ainda não tiver ISBN e o candidato tinha, reforçar
+    if(!meta.isbn && cand.isbn) meta.isbn = cand.isbn;
+
+    // 3) Aplicar complementares do usuário (não inventa; apenas substitui quando usuário informou)
+    if(ctx.edicao) meta.edicao = ctx.edicao;
+    if(ctx.ano) meta.year = String(ctx.ano).slice(0,4);
+
+    // 4) Enriquecimentos
+    const qIA = [meta.title, (meta.authors||[])[0]].filter(Boolean).join(' ');
+    const ia = await fromInternetArchive(qIA); if(ia){ status.ia=true; meta = mergeMeta(meta, ia); }
+    const gut = await fromGutendex(meta.title||ctx.title||'', (meta.authors||[])[0]||ctx.author||'', ctx.subject||''); if(gut){ status.gut=true; meta = mergeMeta(meta, gut); }
+    const ws = await checkWikisource(meta.title||ctx.title||''); if(ws && ws.exists){ status.ws=true; meta.links = {...(meta.links||{}), wikisource: ws.url}; }
+
+    let authority=null;
+    const authName = (meta.authors||[])[0];
+    if(authName){
+      const wd = await getWikidataForAuthor(authName);
+      if(wd){ status.wd=true; authority = { wd }; }
+    }
+
+    populate(meta, authority, status);
+  }catch(err){
+    toast('Falha ao carregar este registro. Tente outro resultado.');
+    console.error(err);
+  }finally{
+    setSkeleton(false);
+  }
+}
+
+/* ===== Abas ===== */
 $$('.meta-tab').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     $$('.meta-tab').forEach(b=>b.classList.remove('active'));
