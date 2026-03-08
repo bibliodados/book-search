@@ -15,6 +15,7 @@
   --grad-a: rgba(56,189,248,.15); --grad-b: rgba(34,197,94,.12);
   --sk-a:#101826; --sk-b:#0f192a;
 }
+
 html[data-theme="light"]{
   --bg:#f8fafc; --panel:#ffffff; --muted:#475569; --text:#0f172a;
   --primary:#0ea5e9; --primary-2:#0284c7; --accent:#16a34a;
@@ -24,6 +25,7 @@ html[data-theme="light"]{
   --grad-a: rgba(56,189,248,.18); --grad-b: rgba(34,197,94,.14);
   --sk-a:#e5e7eb; --sk-b:#f1f5f9;
 }
+
 @media (prefers-color-scheme: light){
   html:not([data-theme="dark"]){
     --bg:#f8fafc; --panel:#ffffff; --muted:#475569; --text:#0f172a;
@@ -35,70 +37,193 @@ html[data-theme="light"]{
     --sk-a:#e5e7eb; --sk-b:#f1f5f9;
   }
 }
+
 *{box-sizing:border-box}
 html,body{height:100%}
+
 body{
-  margin:0; font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto;
+  margin:0;
+  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto;
   background:
     radial-gradient(1200px 700px at 100% -10%, var(--grad-a), rgba(0,0,0,0) 60%),
     radial-gradient(1200px 700px at -10% 110%, var(--grad-b), rgba(0,0,0,0) 60%),
     var(--bg);
   color:var(--text);
 }
-.container{max-width:1120px;margin:40px auto;padding:0 16px}
-.header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+.container{
+  width:min(100%, 1120px);
+  margin:24px auto;
+  padding:0 16px 32px;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+
 h1{
-  flex:1; font-weight:800; letter-spacing:.4px; margin:0 0 8px;
+  font-weight:800;
+  letter-spacing:.4px;
+  margin:0 0 8px;
   background:linear-gradient(90deg,var(--primary),#a78bfa,#f472b6);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-align:center; font-size:clamp(28px,4vw,40px)
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-align:center;
+  font-size:clamp(24px,4vw,40px);
+  line-height:1.15;
 }
+
 .theme-toggle{
-  white-space:nowrap; display:inline-flex; align-items:center; gap:8px;
-  padding:8px 12px; border-radius:999px; background:var(--panel);
-  border:1px solid rgba(var(--border-rgba),.18); color:var(--text);
-  cursor:pointer; font-weight:700; box-shadow:var(--shadow)
+  white-space:nowrap;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:var(--panel);
+  border:1px solid rgba(var(--border-rgba),.18);
+  color:var(--text);
+  cursor:pointer;
+  font-weight:700;
+  box-shadow:var(--shadow);
 }
+
 .theme-toggle .icon{font-size:16px}
 .theme-toggle .label{font-size:13px; opacity:.9}
-.sub{ text-align:center; color:var(--muted); margin-bottom:22px; font-size:14px }
+
+.sub{
+  text-align:center;
+  color:var(--muted);
+  margin:0 auto 22px;
+  font-size:14px;
+  line-height:1.5;
+  max-width:920px;
+}
 
 .card{
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
   border:1px solid rgba(var(--border-rgba),.15);
-  border-radius:var(--br); padding:18px; box-shadow:var(--shadow)
-}
-.grid{display:grid; gap:12px; grid-template-columns: 2fr 2fr 2fr 1fr}
-.grid-compl{display:grid; gap:12px; grid-template-columns: 1fr 1fr 1fr}
-input,button,textarea,select{
-  width:100%; padding:12px 14px; border-radius:10px;
-  border:1px solid rgba(var(--border-rgba),.18);
-  background:var(--surface); color:var(--text); outline:none
-}
-button.cta{
-  background:linear-gradient(180deg,var(--primary),var(--primary-2)); border:none; font-weight:800; color:#001018;
-  cursor:pointer; transition: transform .04s ease
-}
-button.cta:active{transform:translateY(1px)}
-button.ghost{
-  background:var(--panel); color:var(--text);
-  border:1px solid rgba(var(--border-rgba),.25); font-weight:700
-}
-button.ghost:hover{border-color:var(--primary); color:var(--primary)}
-.small-btn{
-  padding:10px 12px; white-space:nowrap; border-radius:10px;
-  border:1px solid rgba(var(--border-rgba),.25); background:var(--panel); color:var(--text); font-weight:700; cursor:pointer
+  border-radius:var(--br);
+  padding:18px;
+  box-shadow:var(--shadow);
 }
 
-.sources{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px }
+.grid{
+  display:grid;
+  gap:12px;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+}
+
+.grid-compl{
+  display:grid;
+  gap:12px;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+}
+
+input,button,textarea,select{
+  width:100%;
+  min-width:0;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid rgba(var(--border-rgba),.18);
+  background:var(--surface);
+  color:var(--text);
+  outline:none;
+  font-size:14px;
+}
+
+textarea{
+  resize:vertical;
+}
+
+button.cta{
+  background:linear-gradient(180deg,var(--primary),var(--primary-2));
+  border:none;
+  font-weight:800;
+  color:#001018;
+  cursor:pointer;
+  transition:transform .04s ease;
+}
+
+button.cta:active{transform:translateY(1px)}
+
+button.ghost{
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid rgba(var(--border-rgba),.25);
+  font-weight:700;
+}
+
+button.ghost:hover{
+  border-color:var(--primary);
+  color:var(--primary);
+}
+
+.small-btn{
+  padding:10px 12px;
+  white-space:nowrap;
+  border-radius:10px;
+  border:1px solid rgba(var(--border-rgba),.25);
+  background:var(--panel);
+  color:var(--text);
+  font-weight:700;
+  cursor:pointer;
+}
+
+.actions-row{
+  display:flex;
+  gap:8px;
+}
+
+.actions-row > button{
+  flex:1;
+}
+
+.isbn-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+}
+
+.sources{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:12px 0 4px;
+}
+
 .chip{
-  display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
   background:var(--chip);
   border:1px solid rgba(var(--border-rgba),.28);
-  color:var(--chip-text); font-size:13px; font-weight:600;
-  box-shadow: inset 0 -1px 0 rgba(255,255,255,.04);
+  color:var(--chip-text);
+  font-size:13px;
+  font-weight:600;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.04);
 }
-.chip .dot{width:8px;height:8px;border-radius:50%; background:var(--muted)}
+
+.chip .dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--muted);
+}
+
 .chip.ok{color:#052e1a; background:rgba(34,197,94,.18); border-color:rgba(34,197,94,.35)}
 .chip.ok .dot{background:var(--accent)}
 .chip.warn{color:#3b2402; background:rgba(245,158,11,.18); border-color:rgba(245,158,11,.38)}
@@ -106,76 +231,447 @@ button.ghost:hover{border-color:var(--primary); color:var(--primary)}
 .chip.err{color:#3a0303; background:rgba(239,68,68,.18); border-color:rgba(239,68,68,.38)}
 .chip.err .dot{background:var(--error)}
 
-.skeleton{ display:none; margin:18px 0; gap:16px; grid-template-columns: 220px 1fr }
-.skeleton.show{display:grid}
-.sk-thumb{height:320px; border-radius:12px; background:linear-gradient(90deg,var(--sk-a),var(--sk-b),var(--sk-a)); background-size:200% 100%; animation:sh 1.4s infinite}
-.sk-line{height:14px; border-radius:6px; background:linear-gradient(90deg,var(--sk-a),var(--sk-b),var(--sk-a)); background-size:200% 100%; animation:sh 1.4s infinite}
-@keyframes sh{0%{background-position:0 0}100%{background-position:200% 0}}
+.skeleton{
+  display:none;
+  margin:18px 0;
+  gap:16px;
+  grid-template-columns:220px 1fr;
+}
 
-.resultsList{display:none; margin:14px 0 0; border-top:1px solid rgba(var(--border-rgba),.12); padding-top:12px}
+.skeleton.show{display:grid}
+
+.sk-thumb,
+.sk-line{
+  background:linear-gradient(90deg,var(--sk-a),var(--sk-b),var(--sk-a));
+  background-size:200% 100%;
+  animation:sh 1.4s infinite;
+}
+
+.sk-thumb{
+  height:320px;
+  border-radius:12px;
+}
+
+.sk-line{
+  height:14px;
+  border-radius:6px;
+}
+
+@keyframes sh{
+  0%{background-position:0 0}
+  100%{background-position:200% 0}
+}
+
+.resultsList{
+  display:none;
+  margin:14px 0 0;
+  border-top:1px solid rgba(var(--border-rgba),.12);
+  padding-top:12px;
+}
+
 .resultsList.show{display:block}
-.resGrid{display:grid; gap:10px; grid-template-columns: 1fr 1fr}
+
+.resGrid{
+  display:grid;
+  gap:10px;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+
 .resItem{
   background:var(--card);
   border:1px solid rgba(var(--border-rgba),.18);
-  border-radius:12px; padding:12px;
-  display:flex; gap:10px; align-items:flex-start;
+  border-radius:12px;
+  padding:12px;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  min-width:0;
 }
-.resItem img{width:54px; height:78px; object-fit:cover; border-radius:8px; border:1px solid rgba(var(--border-rgba),.22)}
-.resItem .txt{flex:1}
-.resItem .t{font-weight:800; margin:0 0 4px; font-size:14px}
-.resItem .m{margin:0; color:var(--muted); font-size:12px; line-height:1.35}
-.resItem button{margin-top:8px}
-@media (max-width:900px){ .resGrid{grid-template-columns:1fr} .grid{grid-template-columns:1fr} .grid-compl{grid-template-columns:1fr} }
 
-.result{ display:none; margin:18px 0; gap:18px; grid-template-columns: 260px 1fr }
+.resItem img{
+  width:54px;
+  height:78px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid rgba(var(--border-rgba),.22);
+  flex-shrink:0;
+}
+
+.resItem .txt{
+  flex:1;
+  min-width:0;
+}
+
+.resItem .t{
+  font-weight:800;
+  margin:0 0 4px;
+  font-size:14px;
+  line-height:1.35;
+}
+
+.resItem .m{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+  word-break:break-word;
+}
+
+.result{
+  display:none;
+  margin:18px 0;
+  gap:18px;
+  grid-template-columns:minmax(220px, 260px) minmax(0, 1fr);
+}
+
 .result.show{display:grid}
-.cover{
-  background:var(--card); border:1px solid rgba(var(--border-rgba),.18); border-radius:12px; padding:10px;
-  display:flex; flex-direction:column; gap:10px; align-items:center
-}
-.cover img{max-width:100%; border-radius:10px; box-shadow:var(--shadow)}
-.carousel{display:flex; gap:8px; overflow:auto; padding-bottom:6px}
-.carousel img{height:68px; border-radius:8px; opacity:.85; cursor:pointer; border:1px solid transparent}
-.carousel img:hover{opacity:1; border-color:var(--primary)}
-.meta{ background:var(--card); border:1px solid rgba(var(--border-rgba),.18); border-radius:12px; padding:16px }
-.kv{display:grid; grid-template-columns: 190px 1fr; gap:8px; font-size:14px}
-.kv div:nth-child(odd){color:var(--muted)}
-.links{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-a.btn{
-  text-decoration:none; background:linear-gradient(180deg,#1f2937,#111827);
-  border:1px solid rgba(var(--border-rgba),.2); padding:8px 12px; border-radius:10px; color:var(--text); font-weight:600
-}
-html[data-theme="light"] a.btn{ background:linear-gradient(180deg,#ffffff,#f8fafc) }
-a.btn:hover{border-color:var(--primary); color:var(--primary)}
 
-.meta-tabs{display:flex; gap:6px; margin-top:14px; flex-wrap:wrap}
-.meta-tab{
-  padding:8px 10px; border-radius:10px; border:1px solid rgba(var(--border-rgba),.18);
-  background:var(--surface); cursor:pointer; font-weight:700; color:var(--text)
+.cover{
+  background:var(--card);
+  border:1px solid rgba(var(--border-rgba),.18);
+  border-radius:12px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
 }
-.meta-tab.active{background:linear-gradient(180deg,var(--primary),var(--primary-2)); color:#001018}
+
+.cover img{
+  width:100%;
+  height:auto;
+  border-radius:10px;
+  box-shadow:var(--shadow);
+}
+
+.carousel{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  width:100%;
+  padding-bottom:6px;
+}
+
+.carousel img{
+  height:68px;
+  width:auto;
+  border-radius:8px;
+  opacity:.85;
+  cursor:pointer;
+  border:1px solid transparent;
+  flex:0 0 auto;
+}
+
+.carousel img:hover{
+  opacity:1;
+  border-color:var(--primary);
+}
+
+.meta{
+  background:var(--card);
+  border:1px solid rgba(var(--border-rgba),.18);
+  border-radius:12px;
+  padding:16px;
+  min-width:0;
+}
+
+.kv{
+  display:grid;
+  grid-template-columns:minmax(140px, 190px) minmax(0, 1fr);
+  gap:8px;
+  font-size:14px;
+}
+
+.kv div{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+
+.kv div:nth-child(odd){
+  color:var(--muted);
+}
+
+.links{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+a.btn{
+  text-decoration:none;
+  background:linear-gradient(180deg,#1f2937,#111827);
+  border:1px solid rgba(var(--border-rgba),.2);
+  padding:8px 12px;
+  border-radius:10px;
+  color:var(--text);
+  font-weight:600;
+}
+
+html[data-theme="light"] a.btn{
+  background:linear-gradient(180deg,#ffffff,#f8fafc);
+}
+
+a.btn:hover{
+  border-color:var(--primary);
+  color:var(--primary);
+}
+
+.meta-tabs{
+  display:flex;
+  gap:6px;
+  margin-top:14px;
+  flex-wrap:wrap;
+}
+
+.meta-tab{
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid rgba(var(--border-rgba),.18);
+  background:var(--surface);
+  cursor:pointer;
+  font-weight:700;
+  color:var(--text);
+}
+
+.meta-tab.active{
+  background:linear-gradient(180deg,var(--primary),var(--primary-2));
+  color:#001018;
+}
+
 .meta-panels{margin-top:10px}
+
 .panel{display:none}
 .panel.active{display:block}
-textarea.code{
-  width:100%; min-height:220px; background:var(--codebg); color:var(--text);
-  border:1px solid rgba(var(--border-rgba),.25);
-  border-radius:12px; padding:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  font-size:13px; line-height:1.5
-}
-.actions{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
-.actions button{background:var(--surface); border:1px solid rgba(var(--border-rgba),.25); color:var(--text)}
-.actions button:hover{border-color:var(--primary); color:var(--primary)}
 
-footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
-.toast{
-  position:fixed; inset:auto 20px 20px auto;
-  background:var(--toast-bg); color:var(--toast-text);
-  border:1px solid rgba(16,185,129,.35);
-  padding:10px 12px; border-radius:10px; display:none; box-shadow:var(--shadow)
+textarea.code{
+  width:100%;
+  min-height:220px;
+  background:var(--codebg);
+  color:var(--text);
+  border:1px solid rgba(var(--border-rgba),.25);
+  border-radius:12px;
+  padding:12px;
+  font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size:13px;
+  line-height:1.5;
 }
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+
+.actions button{
+  background:var(--surface);
+  border:1px solid rgba(var(--border-rgba),.25);
+  color:var(--text);
+}
+
+.actions button:hover{
+  border-color:var(--primary);
+  color:var(--primary);
+}
+
+footer{
+  margin:32px 0 12px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.pix-btn{
+  padding:10px 16px;
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:700;
+  max-width:100%;
+}
+
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  max-width:min(92vw, 360px);
+  background:var(--toast-bg);
+  color:var(--toast-text);
+  border:1px solid rgba(16,185,129,.35);
+  padding:10px 12px;
+  border-radius:10px;
+  display:none;
+  box-shadow:var(--shadow);
+  z-index:9999;
+}
+
 .toast.show{display:block}
+
+@media (max-width:1100px){
+  .container{
+    padding:0 14px 28px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-compl{
+    grid-template-columns:1fr;
+  }
+
+  .result{
+    grid-template-columns:220px minmax(0, 1fr);
+  }
+
+  .kv{
+    grid-template-columns:150px minmax(0, 1fr);
+  }
+}
+
+@media (max-width:820px){
+  .container{
+    margin:18px auto;
+  }
+
+  .header{
+    justify-content:center;
+  }
+
+  .card{
+    padding:14px;
+  }
+
+  .resGrid{
+    grid-template-columns:1fr;
+  }
+
+  .result{
+    grid-template-columns:1fr;
+  }
+
+  .cover{
+    max-width:340px;
+    margin:0 auto;
+  }
+
+  .skeleton{
+    grid-template-columns:1fr;
+  }
+
+  .sk-thumb{
+    height:260px;
+  }
+}
+
+@media (max-width:560px){
+  .container{
+    padding:0 12px 24px;
+  }
+
+  h1{
+    font-size:clamp(21px, 7vw, 28px);
+  }
+
+  .sub{
+    font-size:13px;
+  }
+
+  .card{
+    padding:12px;
+    border-radius:12px;
+  }
+
+  .grid,
+  .grid-compl{
+    grid-template-columns:1fr;
+  }
+
+  .actions-row{
+    flex-direction:column;
+  }
+
+  .isbn-row{
+    grid-template-columns:1fr;
+  }
+
+  .kv{
+    grid-template-columns:1fr;
+    gap:4px 8px;
+  }
+
+  .kv div:nth-child(odd){
+    margin-top:8px;
+    font-weight:700;
+  }
+
+  .meta{
+    padding:12px;
+  }
+
+  .meta-tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .meta-tab{
+    width:100%;
+    text-align:center;
+    font-size:13px;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  .actions button,
+  .small-btn,
+  .pix-btn{
+    width:100%;
+  }
+
+  .resItem{
+    flex-direction:column;
+  }
+
+  .resItem img{
+    width:72px;
+    height:104px;
+  }
+
+  textarea.code{
+    min-height:180px;
+    font-size:12px;
+  }
+
+  .toast{
+    right:12px;
+    left:12px;
+    bottom:12px;
+    max-width:none;
+  }
+}
+
+@media (max-width:380px){
+  .meta-tabs{
+    grid-template-columns:1fr;
+  }
+
+  input,button,textarea,select{
+    font-size:13px;
+    padding:11px 12px;
+  }
+
+  .chip{
+    font-size:12px;
+    padding:7px 10px;
+  }
+}
 </style>
 </head>
 <body>
@@ -195,9 +691,9 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
       <input id="titulo" placeholder="Título"/>
       <input id="autor" placeholder="Autor(a)"/>
       <input id="assunto" placeholder="Assunto (subject)"/>
-      <div style="display:flex; gap:8px;">
-        <button id="buscarDados" class="cta" style="flex:1">Buscar</button>
-        <button id="limpar" class="ghost" style="flex:1">Limpar</button>
+      <div class="actions-row">
+        <button id="buscarDados" class="cta">Buscar</button>
+        <button id="limpar" class="ghost">Limpar</button>
       </div>
     </div>
 
@@ -206,7 +702,7 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
       <div class="grid-compl" style="margin-top:8px; align-items:center">
         <input id="edicao" placeholder="Edição (ex.: 2. ed.)"/>
         <input id="ano" placeholder="Ano (ex.: 2021)"/>
-        <div style="display:grid; grid-template-columns: 1fr auto; gap:8px;">
+        <div class="isbn-row">
           <input id="isbn" placeholder="ISBN (10/13)"/>
           <button id="buscarISBNmini" class="small-btn" title="Buscar por ISBN">ISBN</button>
         </div>
@@ -226,7 +722,7 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
     </div>
 
     <div class="resultsList" id="resultsList">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
         <strong>Resultados</strong>
         <small style="color:var(--muted)">Clique em “Carregar” no registro desejado.</small>
       </div>
@@ -305,7 +801,6 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -315,8 +810,8 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
     💡 Apoie esta iniciativa. Projeto pessoal mantido com recursos próprios. Contribuições via PIX são voluntárias.
   </div>
   <div style="text-align:center; margin-top:6px;">
-    <button style="padding:6px 16px; background:var(--accent); color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;"
-      onclick="navigator.clipboard.writeText('2bc6d233-7e5c-4407-b5d7-8aa9e96e6093').then(()=>alert('Chave PIX copiada para sua área de transferência!'))">
+    <button class="pix-btn"
+      onclick="navigator.clipboard.writeText('2bc6d233-7e5c-4407-b5d7-8aa9e96e6093').then(()=>toast('Chave PIX copiada para a área de transferência'))">
       📲 PIX Copia e Cola
     </button>
   </div>
@@ -334,6 +829,7 @@ footer{margin:32px 0; text-align:center; color:var(--muted); font-size:13px}
   root.setAttribute('data-theme', initial);
   updateThemeUI(initial);
 })();
+
 function toggleTheme(){
   const root=document.documentElement;
   const next = root.getAttribute('data-theme')==='light' ? 'dark' : 'light';
@@ -341,31 +837,52 @@ function toggleTheme(){
   localStorage.setItem('theme', next);
   updateThemeUI(next);
 }
+
 function updateThemeUI(mode){
   const icon=document.getElementById('themeIcon');
   const label=document.getElementById('themeLabel');
-  if(mode==='light'){ icon.textContent='☀️'; label.textContent='Tema: Claro'; }
-  else { icon.textContent='🌙'; label.textContent='Tema: Escuro'; }
+  if(mode==='light'){
+    icon.textContent='☀️';
+    label.textContent='Tema: Claro';
+  }else{
+    icon.textContent='🌙';
+    label.textContent='Tema: Escuro';
+  }
 }
+
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
 /* ===== Util ===== */
 const $ = (q)=>document.querySelector(q);
 const $$ = (q)=>document.querySelectorAll(q);
-const toast = (msg)=>{ const t=$("#toast"); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); };
-const setChip=(id,state)=>{const el=$("#"+id); el.classList.remove('ok','err','warn'); if(state==='ok') el.classList.add('ok'); else if(state==='err') el.classList.add('err'); else if(state==='warn') el.classList.add('warn');};
+const toast = (msg)=>{
+  const t=$("#toast");
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+};
+const setChip=(id,state)=>{
+  const el=$("#"+id);
+  el.classList.remove('ok','err','warn');
+  if(state==='ok') el.classList.add('ok');
+  else if(state==='err') el.classList.add('err');
+  else if(state==='warn') el.classList.add('warn');
+};
 
 document.addEventListener('click',(e)=>{
   if(e.target.matches('[data-copy]')){
     const id=e.target.getAttribute('data-copy');
-    navigator.clipboard.writeText( $('#'+id).value ).then(()=>toast('Copiado para a área de transferência'));
+    navigator.clipboard.writeText($('#'+id).value).then(()=>toast('Copiado para a área de transferência'));
   }
   if(e.target.matches('[data-download]')){
     const id=e.target.getAttribute('data-download');
     const fn=e.target.getAttribute('data-fn');
     const blob=new Blob([$('#'+id).value],{type:'text/plain'});
     const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob); a.download=fn; a.click(); URL.revokeObjectURL(a.href);
+    a.href=URL.createObjectURL(blob);
+    a.download=fn;
+    a.click();
+    URL.revokeObjectURL(a.href);
   }
 });
 
@@ -380,17 +897,26 @@ $('#buscarDados').addEventListener('click', ()=> {
     ano: $('#ano').value.trim()
   });
 });
+
 $('#buscarISBNmini').addEventListener('click', ()=> {
   const isbn=$('#isbn').value.trim();
-  if(!isbn){ toast('Informe um ISBN.'); return; }
+  if(!isbn){
+    toast('Informe um ISBN.');
+    return;
+  }
   search({isbn});
 });
+
 $('#limpar').addEventListener('click', clearAll);
 
 ['#titulo','#autor','#assunto','#isbn','#edicao','#ano'].forEach(id=>{
-  const el=$(id); if(!el) return;
+  const el=$(id);
+  if(!el) return;
   el.addEventListener('keypress', (ev)=>{
-    if(ev.key==='Enter'){ ev.preventDefault(); $('#buscarDados').click(); }
+    if(ev.key==='Enter'){
+      ev.preventDefault();
+      $('#buscarDados').click();
+    }
   });
 });
 
@@ -400,30 +926,34 @@ async function safeJson(url){
   if(!r.ok) throw new Error('HTTP '+r.status);
   return r.json();
 }
+
 const cleanISBN = s => (s||'').replace(/[^0-9X]/gi,'');
 const nowMarcDT = ()=> new Date().toISOString().replace(/[-:.TZ]/g,'').slice(0,14);
 const yyyymmdd = (d=new Date())=> d.toISOString().slice(0,10).replace(/-/g,'');
 
 /* ===== Normalização de dados ===== */
 function uniq(arr){ return Array.from(new Set((arr||[]).filter(Boolean))); }
+
 function first4y(v){
   if(!v) return '';
   const s=String(v);
   const m=s.match(/(\d{4})/);
   return m?m[1]:'';
 }
+
 function normLang(lang){
   if(!lang) return '';
   const s=String(lang).toLowerCase();
-  // OpenLibrary às vezes usa "eng", "por" etc.
   if(s.length===3) return s;
   if(s.startsWith('pt')) return 'por';
   if(s.startsWith('en')) return 'eng';
   return s.slice(0,3);
 }
+
 function joinNonEmpty(parts, sep='; '){
   return (parts||[]).map(s=>String(s||'').trim()).filter(Boolean).join(sep);
 }
+
 function surnameFirst(name){
   if(!name) return '';
   const parts=name.trim().split(/\s+/);
@@ -431,6 +961,7 @@ function surnameFirst(name){
   const last=parts.pop();
   return `${last.toUpperCase()}, ${parts.join(' ')}`;
 }
+
 function authorABNTList(authors){
   const a=(authors||[]).filter(Boolean);
   if(!a.length) return '';
@@ -440,10 +971,7 @@ function authorABNTList(authors){
   return surnameFirst(a[0]) + ' et al.';
 }
 
-/* ===== Referência ABNT NBR 6023:2018 (livro) =====
-   Fato: NBR 6023 tem variações por suporte. Aqui geramos um padrão "livro" (impressa/sem URL),
-   e acrescentamos URL/acesso quando houver link.
-*/
+/* ===== Referência ABNT NBR 6023:2018 ===== */
 function buildABNT(meta){
   const autores = authorABNTList(meta.authors);
   const titulo = meta.title || '';
@@ -454,15 +982,10 @@ function buildABNT(meta){
   const ano = meta.year ? `${meta.year}.` : '';
   const extensao = meta.extent ? ` ${meta.extent}.` : (meta.pageCount ? ` ${meta.pageCount} p.` : '');
   const isbn = meta.isbn ? ` ISBN ${meta.isbn}.` : '';
-
-  // Se existir URL de referência, adiciona (sem inventar data de acesso)
   const url = meta.links?.google || meta.links?.openlibrary || meta.links?.archive || meta.links?.gutenberg || meta.links?.wikisource || '';
   const online = url ? ` Disponível em: ${url}.` : '';
-
-  // Elementos de responsabilidade adicionais (não normativo “perfeito” em todos os casos; é o que dá para inferir)
   const resp = meta.responsibilityStatement ? ` ${meta.responsibilityStatement}.` : '';
 
-  // Montagem (não adiciona campos vazios)
   let out = '';
   if(autores) out += autores + ' ';
   out += `${titulo}${subt}.`;
@@ -492,21 +1015,22 @@ function gbToMeta(v){
     pageCount:v.pageCount||'',
     extent: v.pageCount ? `${v.pageCount} p` : '',
     publisher:v.publisher||'',
-    place:'', // GB normalmente não fornece local editorial
+    place:'',
     language:normLang(v.language),
     subjects:v.categories||[],
     description:v.description||'',
     identifiers: ids,
     isbn: isbn13 || isbn10 || '',
     cover,
-    responsibilityStatement:'', // raramente disponível no GB
-    contributors: [], // não padronizado no GB
-    series: '', // não padronizado no GB
+    responsibilityStatement:'',
+    contributors: [],
+    series: '',
     notes: '',
     links:{ google:v.infoLink||'' },
     provenance:{ googleBooks:{ rawKeys:Object.keys(v||{}) } }
   };
 }
+
 async function gbSearchList(q, max=6){
   try{
     const j=await safeJson(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=${Math.min(10,Math.max(1,max))}`);
@@ -517,7 +1041,8 @@ async function gbSearchList(q, max=6){
       return {
         key: 'gb:'+it.id,
         kind:'gb',
-        title:m.title, subtitle:m.subtitle,
+        title:m.title,
+        subtitle:m.subtitle,
         authors:m.authors,
         year:m.year,
         isbn:m.isbn,
@@ -525,8 +1050,11 @@ async function gbSearchList(q, max=6){
         ref: { volumeId: it.id }
       };
     });
-  }catch{ return []; }
+  }catch{
+    return [];
+  }
 }
+
 async function gbFetchByVolumeId(volumeId){
   try{
     const j=await safeJson(`https://www.googleapis.com/books/v1/volumes/${encodeURIComponent(volumeId)}`);
@@ -534,24 +1062,28 @@ async function gbFetchByVolumeId(volumeId){
     const m=gbToMeta(v);
     m.links.google = v.infoLink||'';
     return m;
-  }catch{ return null; }
+  }catch{
+    return null;
+  }
 }
+
 async function gbFetchByISBN(isbn){
   try{
     const j=await safeJson(`https://www.googleapis.com/books/v1/volumes?q=isbn:${encodeURIComponent(isbn)}`);
     const it=(j.items||[])[0];
     if(!it) return null;
     return gbFetchByVolumeId(it.id);
-  }catch{ return null; }
+  }catch{
+    return null;
+  }
 }
 
-/* ===== OpenLibrary =====
-   Estratégia: listar (search.json) -> escolher item -> puxar edição (OLID) ou obra (works) + edição para campos ricos.
-*/
+/* ===== OpenLibrary ===== */
 function olCoverFromDoc(d){
   if(d.cover_i) return `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`;
   return '';
 }
+
 async function olSearchList({title,author,subject}, max=8){
   try{
     const params=new URLSearchParams();
@@ -577,22 +1109,30 @@ async function olSearchList({title,author,subject}, max=8){
         ref:{ olid, workKey, coverEditionKey:d.cover_edition_key||'' }
       };
     });
-  }catch{ return []; }
+  }catch{
+    return [];
+  }
 }
-async function olFetchEditionByOLID(olid){ // olid: "OL123M" (sem prefixo)
+
+async function olFetchEditionByOLID(olid){
   try{
     const e=await safeJson(`https://openlibrary.org/books/${encodeURIComponent(olid)}.json`);
     return e;
-  }catch{ return null; }
+  }catch{
+    return null;
+  }
 }
-async function olFetchWorkByKey(workKey){ // "/works/OL...W"
+
+async function olFetchWorkByKey(workKey){
   try{
     const w=await safeJson(`https://openlibrary.org${workKey}.json`);
     return w;
-  }catch{ return null; }
+  }catch{
+    return null;
+  }
 }
+
 async function olFetchEditionFromRef(ref){
-  // Prioridade: OLID (edição) -> coverEditionKey -> fallback: work
   let edition=null;
   if(ref?.olid){
     const olid=ref.olid.replace(/^OLID:/,'');
@@ -600,6 +1140,7 @@ async function olFetchEditionFromRef(ref){
   }else if(ref?.coverEditionKey){
     edition=await olFetchEditionByOLID(ref.coverEditionKey);
   }
+
   let work=null;
   if(ref?.workKey){
     work=await olFetchWorkByKey(ref.workKey);
@@ -607,7 +1148,6 @@ async function olFetchEditionFromRef(ref){
     work=await olFetchWorkByKey(edition.works[0].key);
   }
 
-  // Contribuidores com papel
   const contributors=(edition?.contributors||[]).map(c=>{
     const n=c.name||'';
     const r=c.role||'';
@@ -619,7 +1159,6 @@ async function olFetchEditionFromRef(ref){
   const isbn10=(edition?.isbn_10||[])[0] || '';
   if(isbn13) identifiers.push({type:'ISBN_13', identifier:isbn13});
   if(isbn10) identifiers.push({type:'ISBN_10', identifier:isbn10});
-  // outros ids podem existir em "identifiers"
   if(edition?.identifiers){
     for(const k of Object.keys(edition.identifiers)){
       const arr=Array.isArray(edition.identifiers[k]) ? edition.identifiers[k] : [edition.identifiers[k]];
@@ -627,10 +1166,8 @@ async function olFetchEditionFromRef(ref){
     }
   }
 
-  // Assuntos (obra tende a ser mais rica)
   const subjects = uniq([...(edition?.subjects||[]), ...(work?.subjects||[])]);
 
-  // Descrição (obra tende a ter)
   let description='';
   const wd = work?.description;
   if(typeof wd==='string') description=wd;
@@ -643,34 +1180,22 @@ async function olFetchEditionFromRef(ref){
 
   const title = (edition?.title || work?.title || '') || '';
   const subtitle = edition?.subtitle || work?.subtitle || '';
-  const authors = (work?.authors||[]).map(a=>a?.author?.key).filter(Boolean); // chaves
-  // Resolver nomes de autores via /authors/<key>.json se necessário (caro). Aqui preferimos "by_statement" e "work.authors" quando já vierem nomes.
   const byStatement = edition?.by_statement || '';
-  const authorNamesFromEdition = (edition?.authors||[]).map(a=>a?.key).filter(Boolean);
-
-  // Melhor esforço: se a lista de autores não vier com nomes, usa by_statement como responsabilidade
   const responsibilityStatement = byStatement || '';
-
-  // Local editorial e editora
   const place = (edition?.publish_places||[])[0] || '';
   const publisher = Array.isArray(edition?.publishers) ? edition.publishers.join('; ') : (edition?.publishers||'');
   const publishDate = edition?.publish_date || '';
   const year = first4y(publishDate) || (work?.first_publish_date ? first4y(work.first_publish_date) : '');
-
-  // Extensão/paginação
   const extent = edition?.pagination || (edition?.number_of_pages ? `${edition.number_of_pages} p` : '');
   const pageCount = edition?.number_of_pages || '';
-
-  // Série / notas
   const series = Array.isArray(edition?.series) ? edition.series.join('; ') : (edition?.series||'');
+
   let notes='';
   if(typeof edition?.notes==='string') notes=edition.notes;
   else if(edition?.notes && typeof edition.notes==='object') notes=edition.notes.value||'';
 
-  // Idioma (edition.languages = [{key:'/languages/eng'}])
   const language = normLang((edition?.languages||[])[0]?.key?.split('/').pop());
 
-  // Capas: se tiver covers, montar URLs
   const extraCovers=[];
   if(Array.isArray(edition?.covers)){
     edition.covers.slice(0,6).forEach(id=>extraCovers.push(`https://covers.openlibrary.org/b/id/${id}-L.jpg`));
@@ -678,11 +1203,15 @@ async function olFetchEditionFromRef(ref){
 
   return {
     source:'ol',
-    title, subtitle,
-    authors: [], // manteremos nomes vindos do search; aqui fica vazio por custo de resolução
-    year, publishedDate: publishDate,
-    pageCount, extent,
-    publisher, place,
+    title,
+    subtitle,
+    authors: [],
+    year,
+    publishedDate: publishDate,
+    pageCount,
+    extent,
+    publisher,
+    place,
     language,
     subjects,
     description,
@@ -739,8 +1268,11 @@ async function fromInternetArchive(q){
       links:{ archive:`https://archive.org/details/${d.identifier}` },
       provenance:{ internetArchive:{ identifier:d.identifier } }
     };
-  }catch{ return null; }
+  }catch{
+    return null;
+  }
 }
+
 function gutToMeta(b){
   return {
     source:'gut',
@@ -767,14 +1299,18 @@ function gutToMeta(b){
     provenance:{ gutendex:{ id:b.id } }
   };
 }
+
 async function fromGutendex(title,author,subject){
   try{
     const s=[title,author,subject].filter(Boolean).join(' ');
     const j=await safeJson(`https://gutendex.com/books?search=${encodeURIComponent(s)}`);
     if(!j.results || !j.results.length) return null;
     return gutToMeta(j.results[0]);
-  }catch{ return null; }
+  }catch{
+    return null;
+  }
 }
+
 async function checkWikisource(title){
   try{
     const j=await safeJson(`https://pt.wikisource.org/w/api.php?action=query&format=json&origin=*&titles=${encodeURIComponent(title)}`);
@@ -784,8 +1320,11 @@ async function checkWikisource(title){
       return { source:'ws', exists:true, url:`https://pt.wikisource.org/wiki/${encodeURIComponent(title.replace(/\s/g,'_'))}` };
     }
     return { source:'ws', exists:false };
-  }catch{ return { source:'ws', exists:false }; }
+  }catch{
+    return { source:'ws', exists:false };
+  }
 }
+
 async function getWikidataForAuthor(name){
   try{
     const search=await safeJson(`https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(name)}&language=pt&format=json&origin=*`);
@@ -795,21 +1334,33 @@ async function getWikidataForAuthor(name){
     const e=ent.entities[id];
     const lab=(e.labels?.pt?.value)|| (e.labels?.en?.value)|| name;
     const aliases=(e.aliases?.pt||[]).map(a=>a.value).slice(0,8);
+
     function val(prop){ return e.claims?.[prop]?.[0]?.mainsnak?.datavalue?.value; }
-    function valTime(prop){ const v=val(prop); if(!v || !v.time) return ''; return v.time.replace('+','').slice(1,11); }
-    const VIAF = val('P214'), ISNI = val('P213');
-    const birth = valTime('P569'), death = valTime('P570');
+    function valTime(prop){
+      const v=val(prop);
+      if(!v || !v.time) return '';
+      return v.time.replace('+','').slice(1,11);
+    }
+
+    const VIAF = val('P214');
+    const ISNI = val('P213');
+    const birth = valTime('P569');
+    const death = valTime('P570');
     return { id, label:lab, aliases, VIAF, ISNI, birth, death };
-  }catch{ return null; }
+  }catch{
+    return null;
+  }
 }
 
-/* ===== Merge (consolidação) ===== */
-function prefer(a,b){ return (a!==undefined && a!==null && String(a).trim()!=='') ? a : b; }
+/* ===== Merge ===== */
+function prefer(a,b){
+  return (a!==undefined && a!==null && String(a).trim()!=='') ? a : b;
+}
+
 function mergeMeta(base, plus){
   if(!plus) return base;
   const out = {...base};
 
-  // Campos principais
   out.title = prefer(out.title, plus.title);
   out.subtitle = prefer(out.subtitle, plus.subtitle);
   out.authors = (out.authors && out.authors.length) ? out.authors : (plus.authors||[]);
@@ -825,25 +1376,18 @@ function mergeMeta(base, plus){
   out.notes = prefer(out.notes, plus.notes);
   out.responsibilityStatement = prefer(out.responsibilityStatement, plus.responsibilityStatement);
 
-  // Listas
   out.subjects = uniq([...(out.subjects||[]), ...(plus.subjects||[])]);
   out.contributors = uniq([...(out.contributors||[]), ...(plus.contributors||[])]);
   out.identifiers = uniq([...(out.identifiers||[]), ...(plus.identifiers||[])].map(x=>JSON.stringify(x))).map(x=>JSON.parse(x));
 
-  // ISBN (preferir ISBN_13)
   const outIsbn13 = (out.identifiers||[]).find(x=>x.type==='ISBN_13')?.identifier || '';
   const plusIsbn13 = (plus.identifiers||[]).find(x=>x.type==='ISBN_13')?.identifier || '';
   out.isbn = prefer(out.isbn, outIsbn13 || plusIsbn13 || plus.isbn);
 
-  // Capa e links
   out.cover = prefer(out.cover, plus.cover);
   out.extraCovers = uniq([...(out.extraCovers||[]), ...(plus.extraCovers||[]), plus.cover].filter(Boolean));
   out.links = {...(out.links||{}), ...(plus.links||{})};
-
-  // Proveniência
   out.provenance = {...(out.provenance||{}), ...(plus.provenance||{})};
-
-  // Fonte dominante (a primeira que trouxe o núcleo)
   out.source = out.source || plus.source;
 
   return out;
@@ -855,7 +1399,6 @@ function buildMARCbib(meta){
   const author = (meta.authors||[])[0] || 'Desconhecido';
   const authorNorm = surnameFirst(author) || 'DESCONHECIDO';
   const pubYear = meta.year || 'xxxx';
-  const pages = meta.pageCount || (meta.extent||'').replace(/[^\d]/g,'') || '???';
   const title = meta.title || 'Sem título';
   const subtitle = meta.subtitle || '';
   const desc = (meta.description||'').replace(/\r?\n/g,' ').slice(0,2000);
@@ -866,7 +1409,6 @@ function buildMARCbib(meta){
   const publisher = meta.publisher || '[s.n.]';
   const ed = meta.edicao || '';
   const extent = meta.extent || (meta.pageCount ? `${meta.pageCount} p.` : '');
-
   const subjects = (meta.subjects||[]).slice(0,6);
   const subj1 = subjects[0] || 'Obras diversas.';
   const otherAuthors = (meta.authors||[]).slice(1);
@@ -902,6 +1444,7 @@ function buildMARCbib(meta){
 `=856  45$uhttps://www.librarything.com/search.php?search=${encodeURIComponent(title)}$zLibraryThing`
   ].filter(Boolean).join('\n');
 }
+
 function buildDublinCore(meta){
   const isbn = meta.isbn||'';
   return [
@@ -920,6 +1463,7 @@ function buildDublinCore(meta){
 `<dc:rights>N/A</dc:rights>`
   ].join('\n');
 }
+
 function buildMARCAuthority(author, wd){
   if(!author && !wd) return 'Sem dados de autoridade encontrados.';
   const name = author || wd?.label || 'Desconhecido';
@@ -939,7 +1483,9 @@ function buildMARCAuthority(author, wd){
   let d100 = `=100  1_$a${nameNorm}`;
   if(dates) d100 += `,$d${dates}`;
   lines.push(d100);
-  (wd?.aliases||[]).forEach(v=>{ lines.push(`=400  1_$a${surnameFirst(v)}`); });
+  (wd?.aliases||[]).forEach(v=>{
+    lines.push(`=400  1_$a${surnameFirst(v)}`);
+  });
   lines.push(`=667  __$aRegistro de autoridade gerado automaticamente a partir de Wikidata.`);
   lines.push(`=670  __$aWikidata ${wd?.id||''}, acesso em ${today}.`);
   return lines.join('\n');
@@ -949,12 +1495,22 @@ function buildMARCAuthority(author, wd){
 function setSkeleton(on){ $('#sk').classList.toggle('show', !!on); }
 function setResult(on){ $('#result').classList.toggle('show', !!on); }
 function setResultsList(on){ $('#resultsList').classList.toggle('show', !!on); }
+
 function clearAll(){
-  ['#titulo','#autor','#assunto','#isbn','#edicao','#ano'].forEach(sel=>{ const el=$(sel); if(el) el.value=''; });
-  setResult(false); setSkeleton(false); setResultsList(false);
+  ['#titulo','#autor','#assunto','#isbn','#edicao','#ano'].forEach(sel=>{
+    const el=$(sel);
+    if(el) el.value='';
+  });
+  setResult(false);
+  setSkeleton(false);
+  setResultsList(false);
   $('#resGrid').innerHTML='';
-  ['s-ol','s-gb','s-ia','s-gut','s-ws','s-wd'].forEach(id=>{ const el=$("#"+id); el.classList.remove('ok','err','warn'); });
+  ['s-ol','s-gb','s-ia','s-gut','s-ws','s-wd'].forEach(id=>{
+    const el=$("#"+id);
+    el.classList.remove('ok','err','warn');
+  });
 }
+
 function populate(meta, authority, sourcesStatus){
   setChip('s-ol', sourcesStatus.ol?'ok':'');
   setChip('s-gb', sourcesStatus.gb?'ok':'');
@@ -965,15 +1521,26 @@ function populate(meta, authority, sourcesStatus){
 
   const covers = uniq([meta.cover, ...(meta.extraCovers||[])]).filter(Boolean);
   $('#coverMain').src = covers[0] || '';
-  const car = $('#carousel'); car.innerHTML='';
+  const car = $('#carousel');
+  car.innerHTML='';
   covers.slice(1).forEach(url=>{
-    const im=document.createElement('img'); im.src=url; im.alt='Capa';
+    const im=document.createElement('img');
+    im.src=url;
+    im.alt='Capa';
     im.addEventListener('click', ()=> { $('#coverMain').src=url; });
     car.appendChild(im);
   });
 
-  const kv=$('#kv'); kv.innerHTML='';
-  const addKV=(k,v)=>{ const kd=document.createElement('div'); kd.textContent=k; const vd=document.createElement('div'); vd.textContent=(v!==undefined && v!==null && String(v).trim()!=='')? String(v) : 'N/A'; kv.appendChild(kd); kv.appendChild(vd); };
+  const kv=$('#kv');
+  kv.innerHTML='';
+  const addKV=(k,v)=>{
+    const kd=document.createElement('div');
+    kd.textContent=k;
+    const vd=document.createElement('div');
+    vd.textContent=(v!==undefined && v!==null && String(v).trim()!=='')? String(v) : 'N/A';
+    kv.appendChild(kd);
+    kv.appendChild(vd);
+  };
 
   addKV('Título', meta.title);
   addKV('Subtítulo', meta.subtitle);
@@ -985,7 +1552,7 @@ function populate(meta, authority, sourcesStatus){
   addKV('Data publicada', meta.publishedDate || '');
   addKV('Local', meta.place || '');
   addKV('Editora', meta.publisher || '');
-  addKV('Extensão/Paginação', meta.extent || (meta.pageCount?`${meta.pageCount} p`:''));
+  addKV('Extensão/Paginação', meta.extent || (meta.pageCount?`${meta.pageCount} p`:'')); 
   addKV('Idioma', meta.language || '');
   addKV('Série', meta.series || '');
   addKV('Assuntos', joinNonEmpty((meta.subjects||[]).slice(0,20), '; '));
@@ -995,8 +1562,18 @@ function populate(meta, authority, sourcesStatus){
   addKV('Fonte dominante (merge)', meta.source || '');
   addKV('Proveniência', JSON.stringify(meta.provenance||{}, null, 0));
 
-  const links=$('#links'); links.innerHTML='';
-  const lb = (href,txt)=>{ if(!href) return; const a=document.createElement('a'); a.href=href; a.target='_blank'; a.className='btn'; a.textContent=txt; links.appendChild(a); };
+  const links=$('#links');
+  links.innerHTML='';
+  const lb = (href,txt)=>{
+    if(!href) return;
+    const a=document.createElement('a');
+    a.href=href;
+    a.target='_blank';
+    a.className='btn';
+    a.textContent=txt;
+    links.appendChild(a);
+  };
+
   lb(meta.links?.google,'Google Books');
   lb(meta.links?.openlibrary,'OpenLibrary');
   lb(meta.links?.archive,'Internet Archive');
@@ -1009,16 +1586,18 @@ function populate(meta, authority, sourcesStatus){
   $('#abntText').value = buildABNT(meta);
   $('#marcBibText').value = buildMARCbib(meta);
   $('#dcText').value = buildDublinCore(meta);
-  $('#marcAuthText').value = buildMARCAuthority( (meta.authors||[])[0], authority?.wd || null );
+  $('#marcAuthText').value = buildMARCAuthority((meta.authors||[])[0], authority?.wd || null);
   $('#jsonText').value = JSON.stringify({meta, authority, sourcesStatus}, null, 2);
 
-  setSkeleton(false); setResult(true);
+  setSkeleton(false);
+  setResult(true);
   $('#result').scrollIntoView({behavior:'smooth'});
 }
 
 /* ===== Lista de resultados ===== */
 function renderCandidates(cands){
-  const grid=$('#resGrid'); grid.innerHTML='';
+  const grid=$('#resGrid');
+  grid.innerHTML='';
   if(!cands.length){
     setResultsList(false);
     return;
@@ -1027,79 +1606,111 @@ function renderCandidates(cands){
   cands.forEach(c=>{
     const div=document.createElement('div');
     div.className='resItem';
+
     const img=document.createElement('img');
     img.src=c.cover||'';
     img.alt='Capa';
+
     const txt=document.createElement('div');
     txt.className='txt';
+
     const t=document.createElement('p');
     t.className='t';
     t.textContent = c.title + (c.subtitle?`: ${c.subtitle}`:'');
+
     const m=document.createElement('p');
     m.className='m';
     const a=(c.authors||[]).slice(0,3).join('; ');
     const y=c.year||'';
     const isbn=c.isbn?`ISBN: ${c.isbn}`:'';
     m.textContent = [a,y,isbn,`Fonte: ${c.kind.toUpperCase()}`].filter(Boolean).join(' · ');
+
     const btn=document.createElement('button');
     btn.className='small-btn';
     btn.textContent='Carregar';
     btn.addEventListener('click', ()=> loadCandidate(c));
-    txt.appendChild(t); txt.appendChild(m); txt.appendChild(btn);
-    div.appendChild(img); div.appendChild(txt);
+
+    txt.appendChild(t);
+    txt.appendChild(m);
+    txt.appendChild(btn);
+    div.appendChild(img);
+    div.appendChild(txt);
     grid.appendChild(div);
   });
 }
 
 /* ===== Orquestração principal ===== */
 async function search({title,author,subject,isbn,edicao,ano}){
-  setResult(false); setSkeleton(true); setResultsList(false);
+  setResult(false);
+  setSkeleton(true);
+  setResultsList(false);
   $('#resGrid').innerHTML='';
-  ['s-ol','s-gb','s-ia','s-gut','s-ws','s-wd'].forEach(id=>{ const el=$("#"+id); el.classList.remove('ok','err','warn'); });
+  ['s-ol','s-gb','s-ia','s-gut','s-ws','s-wd'].forEach(id=>{
+    const el=$("#"+id);
+    el.classList.remove('ok','err','warn');
+  });
 
   try{
     let meta=null;
     let status={ol:false,gb:false,ia:false,gut:false,ws:false,wd:false};
 
-    // 1) Se ISBN: buscar diretamente (GB + OL) e já consolidar (sem lista)
     if(isbn){
       isbn = cleanISBN(isbn);
       const g = await gbFetchByISBN(isbn);
-      if(g){ status.gb=true; g.isbn = isbn; meta = mergeMeta({isbn}, g); }
-      // OpenLibrary: via ISBN não é tão “rico”; preferimos puxar a edição via search + OLID quando possível
-      // Estratégia: usar search com isbn para obter edition_key e depois puxar edição
+      if(g){
+        status.gb=true;
+        g.isbn = isbn;
+        meta = mergeMeta({isbn}, g);
+      }
+
       const olCands = await olSearchList({title:isbn, author:'', subject:''}, 6);
       const bestOl = olCands.find(x=>x.isbn===isbn) || olCands[0];
       if(bestOl && bestOl.ref){
         const olRich = await olFetchEditionFromRef(bestOl.ref);
         if(olRich){
           status.ol=true;
-          // reaproveitar autores do candidato (porque não resolvemos nomes via /authors/)
           olRich.authors = (bestOl.authors||[]);
           olRich.isbn = isbn || olRich.isbn;
           meta = meta ? mergeMeta(meta, olRich) : mergeMeta({isbn}, olRich);
         }
       }
+
       if(!meta){
         setSkeleton(false);
         toast('Nenhum resultado por ISBN. Tente título/autor/assunto.');
         return;
       }
-      // complementares do usuário
+
       if(edicao) meta.edicao = edicao;
       if(ano) meta.year = String(ano).slice(0,4);
 
-      // enriquecer com IA/Gutenberg/Wikisource/Wikidata (melhor esforço)
       const qIA = [meta.title, (meta.authors||[])[0]].filter(Boolean).join(' ');
-      const ia = await fromInternetArchive(qIA); if(ia){ status.ia=true; meta = mergeMeta(meta, ia); }
-      const gut = await fromGutendex(meta.title||title||'', (meta.authors||[])[0]||author||'', subject||''); if(gut){ status.gut=true; meta = mergeMeta(meta, gut); }
-      const ws = await checkWikisource(meta.title||title||''); if(ws && ws.exists){ status.ws=true; meta.links = {...(meta.links||{}), wikisource: ws.url}; }
+      const ia = await fromInternetArchive(qIA);
+      if(ia){
+        status.ia=true;
+        meta = mergeMeta(meta, ia);
+      }
+
+      const gut = await fromGutendex(meta.title||title||'', (meta.authors||[])[0]||author||'', subject||'');
+      if(gut){
+        status.gut=true;
+        meta = mergeMeta(meta, gut);
+      }
+
+      const ws = await checkWikisource(meta.title||title||'');
+      if(ws && ws.exists){
+        status.ws=true;
+        meta.links = {...(meta.links||{}), wikisource: ws.url};
+      }
 
       let authority=null;
       const authName = (meta.authors||[])[0];
       if(authName){
         const wd = await getWikidataForAuthor(authName);
-        if(wd){ status.wd=true; authority = { wd }; }
+        if(wd){
+          status.wd=true;
+          authority = { wd };
+        }
       }
 
       populate(meta, authority, status);
@@ -1107,7 +1718,6 @@ async function search({title,author,subject,isbn,edicao,ano}){
       return;
     }
 
-    // 2) Sem ISBN: gerar lista de candidatos (OL + GB) e deixar o usuário escolher
     const qParts=[];
     if(title) qParts.push(`intitle:${title}`);
     if(author) qParts.push(`inauthor:${author}`);
@@ -1124,9 +1734,8 @@ async function search({title,author,subject,isbn,edicao,ano}){
       toast('Nenhum resultado. Ajuste os termos ou informe o ISBN.');
       return;
     }
-    renderCandidates(mergedList);
 
-    // Guardar último contexto para carregar candidato
+    renderCandidates(mergedList);
     window.__lastSearchContext = { title, author, subject, edicao, ano };
   }catch(err){
     setSkeleton(false);
@@ -1137,7 +1746,8 @@ async function search({title,author,subject,isbn,edicao,ano}){
 
 /* ===== Carregar candidato selecionado ===== */
 async function loadCandidate(cand){
-  setResult(false); setSkeleton(true);
+  setResult(false);
+  setSkeleton(true);
 
   const ctx = window.__lastSearchContext || {};
   let meta = {
@@ -1169,43 +1779,57 @@ async function loadCandidate(cand){
   let status={ol:false,gb:false,ia:false,gut:false,ws:false,wd:false};
 
   try{
-    // 1) Fonte primária do candidato
     if(cand.kind==='gb'){
       const g = await gbFetchByVolumeId(cand.ref.volumeId);
-      if(g){ status.gb=true; meta = mergeMeta(meta, g); }
+      if(g){
+        status.gb=true;
+        meta = mergeMeta(meta, g);
+      }
     }else if(cand.kind==='ol'){
       const rich = await olFetchEditionFromRef(cand.ref);
       if(rich){
         status.ol=true;
-        // manter autores do candidato (nomes já disponíveis)
         rich.authors = (cand.authors||[]);
-        // manter capa do candidato se mais forte
         if(cand.cover && !rich.cover) rich.cover = cand.cover;
         meta = mergeMeta(meta, rich);
       }else{
-        status.ol=true; // pelo menos veio do OL search
+        status.ol=true;
         meta.links.openlibrary = cand.ref.workKey ? `https://openlibrary.org${cand.ref.workKey}` : '';
       }
     }
 
-    // 2) Se ainda não tiver ISBN e o candidato tinha, reforçar
     if(!meta.isbn && cand.isbn) meta.isbn = cand.isbn;
 
-    // 3) Aplicar complementares do usuário (não inventa; apenas substitui quando usuário informou)
     if(ctx.edicao) meta.edicao = ctx.edicao;
     if(ctx.ano) meta.year = String(ctx.ano).slice(0,4);
 
-    // 4) Enriquecimentos
     const qIA = [meta.title, (meta.authors||[])[0]].filter(Boolean).join(' ');
-    const ia = await fromInternetArchive(qIA); if(ia){ status.ia=true; meta = mergeMeta(meta, ia); }
-    const gut = await fromGutendex(meta.title||ctx.title||'', (meta.authors||[])[0]||ctx.author||'', ctx.subject||''); if(gut){ status.gut=true; meta = mergeMeta(meta, gut); }
-    const ws = await checkWikisource(meta.title||ctx.title||''); if(ws && ws.exists){ status.ws=true; meta.links = {...(meta.links||{}), wikisource: ws.url}; }
+    const ia = await fromInternetArchive(qIA);
+    if(ia){
+      status.ia=true;
+      meta = mergeMeta(meta, ia);
+    }
+
+    const gut = await fromGutendex(meta.title||ctx.title||'', (meta.authors||[])[0]||ctx.author||'', ctx.subject||'');
+    if(gut){
+      status.gut=true;
+      meta = mergeMeta(meta, gut);
+    }
+
+    const ws = await checkWikisource(meta.title||ctx.title||'');
+    if(ws && ws.exists){
+      status.ws=true;
+      meta.links = {...(meta.links||{}), wikisource: ws.url};
+    }
 
     let authority=null;
     const authName = (meta.authors||[])[0];
     if(authName){
       const wd = await getWikidataForAuthor(authName);
-      if(wd){ status.wd=true; authority = { wd }; }
+      if(wd){
+        status.wd=true;
+        authority = { wd };
+      }
     }
 
     populate(meta, authority, status);
